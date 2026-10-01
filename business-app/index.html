@@ -405,9 +405,11 @@ function planSVG(f) {
   return s + '</svg>';
 }
 function mapView() {
+  const is3d = (S.mapMode || '3d') === '3d', floors = is3d ? ['all', 'F1', 'F2', 'F3'] : ['F1', 'F2', 'F3'], sel = is3d ? (S.floor3d || 'all') : S.floorView;
   return `<h1>Live map</h1><div class="sub">${esc(robot().name)} · ${esc(current().label)}</div>
-  <div class="chips" role="group" aria-label="Choose floor">${['F1', 'F2', 'F3'].map(f => `<button class="chip" data-floor="${f}" aria-pressed="${S.floorView === f}">${FLOORS[f].name}</button>`).join('')}</div>
-  <div class="card">${planSVG(S.floorView)}</div>
+  <div class="seg" role="group" aria-label="Map view"><button data-mapmode="3d" aria-pressed="${is3d}">3D model</button><button data-mapmode="2d" aria-pressed="${!is3d}">2D plan</button></div>
+  <div class="chips" role="group" aria-label="Choose floor">${floors.map(f => `<button class="chip" data-floor="${f}" aria-pressed="${sel === f}">${f === 'all' ? 'All floors' : FLOORS[f].name}</button>`).join('')}</div>
+  ${is3d ? '<div id="slotMap3d"></div>' : `<div class="card">${planSVG(S.floorView)}</div>`}
   <div class="legend"><span><i style="background:var(--ok-soft);border:1px solid var(--ok)"></i>Cleaned</span><span><i style="background:var(--alert-soft);border:1px solid var(--alert)"></i>Booked</span><span><i style="background:var(--led)"></i>${esc(robot().name)}</span><span><i style="background:var(--amber)"></i>Lost item</span></div>
   <div class="card"><div class="row between"><div><b style="font-size:14px">Send ${esc(robot().name)} to ${FLOORS[S.floorView].name}</b><div class="sub" style="margin:2px 0 0">It flies via the atrium and continues there</div></div><button class="btn btn-ghost" id="sendTo">Send</button></div></div>
   <div class="sample">Sample building</div>`;
@@ -622,13 +624,18 @@ function bldState() {
   const progress = {}; PLAN.forEach(p => progress[p[1]] = roomProgress(p[1]));
   return { progress, booked: { meetA: S.running && S.min < 60 }, robot: botPos(), lost: S.min >= 41 && !S.keysCollected && S.min < 118 ? { floor: 'F2', x: 150, y: 120 } : null };
 }
+// the building stage moves between the Map and the 3D tab, so keep a direct reference (getElementById misses it while detached)
+const stageBEl = document.getElementById('stageB'), qB = sel => stageBEl.querySelector(sel);
+function ensureBld() {
+  if (bld || bldLoading) return; bldLoading = true;
+  import('./levia-building.js').then(({ mountBuilding }) => { bld = mountBuilding(stageBEl, { floors: FLOORS, labelsEl: qB('#blabels'), getState: bldState }); bld.setAccent(P.accent); qB('#hintB').textContent = 'Drag to rotate'; })
+    .catch(() => { qB('#hintB').textContent = '3D could not load here'; });
+}
 function set3dMode(m) {
   v3mode = m; document.querySelectorAll('[data-v3]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v3 === m)));
   $('bldPane').hidden = m !== 'bld'; $('botPane').hidden = m !== 'bot';
   if (bld) bld.setActive(m === 'bld'); if (viewer) viewer.setActive(m === 'bot');
-  if (m === 'bld' && !bld && !bldLoading) { bldLoading = true;
-    import('./levia-building.js').then(({ mountBuilding }) => { bld = mountBuilding($('stageB'), { floors: FLOORS, labelsEl: $('blabels'), getState: bldState }); bld.setAccent(P.accent); $('hintB').textContent = 'Drag to rotate'; })
-      .catch(() => { $('hintB').textContent = '3D could not load here'; }); }
+  if (m === 'bld') { $('bldPane').prepend(stageBEl); ensureBld(); }
   if (m === 'bot' && !viewer && !viewerLoading) { viewerLoading = true;
     import('./levia-viewer.js').then(({ mountLevia }) => {
       viewer = mountLevia($('stage3d'), { labelsEl: $('plabels'),
@@ -647,7 +654,7 @@ function draw3dPanels() {
 function show3d(on) {
   $('view').classList.toggle('off', on); $('v3d').classList.toggle('on', on);
   if (!on) { if (viewer) viewer.setActive(false); if (bld) bld.setActive(false); return; }
-  const n = robot().name; $('t3d').textContent = v3mode === 'bld' ? robot().building : `${n} in 3D`; $('tag3d').textContent = n; $('tagB').textContent = `${robot().building} · ${n}`;
+  const n = robot().name; $('t3d').textContent = v3mode === 'bld' ? robot().building : `${n} in 3D`; $('tag3d').textContent = n; qB('#tagB').textContent = `${robot().building} · ${n}`;
   draw3dPanels(); set3dMode(v3mode);
 }
 $('v3d').addEventListener('click', e => {
@@ -787,6 +794,7 @@ function render() {
   v.innerHTML = map[S.tab]();
   v.scrollTop = S.tab === 'chat' ? v.scrollHeight : keep ? scroll : 0; S.lastView = S.tab + (S.sub || '');
   v.classList.toggle('chatview', S.tab === 'chat');
+  const slot = $('slotMap3d'); if (slot) { slot.appendChild(stageBEl); ensureBld(); if (bld) bld.setActive(true); }
 }
 document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (!b) return; S.tab = b.dataset.tab; S.sub = null; render(); });
 $('view').addEventListener('click', e => {
@@ -816,6 +824,8 @@ $('view').addEventListener('click', e => {
   else if (t.dataset.day) t.setAttribute('aria-pressed', String(t.getAttribute('aria-pressed') !== 'true'));
   else if (t.dataset.go) { S.tab = t.dataset.go; S.sub = null; }
   else if (t.dataset.subGo) { S.tab = 'more'; S.sub = t.dataset.subGo; }
+  else if (t.dataset.mapmode) { S.mapMode = t.dataset.mapmode; if (S.mapMode === '3d' && bld) bld.replayScan(); }
+  else if (t.dataset.floor && (S.mapMode || '3d') === '3d') { S.floor3d = t.dataset.floor; if (bld) bld.setFloor(S.floor3d); }
   else if (t.dataset.floor) S.floorView = t.dataset.floor;
   else if (t.dataset.q) { sendChat(t.dataset.q); return; }
   else if (t.dataset.alertGo) { S.tab = '3d'; v3mode = 'bot'; }
@@ -842,5 +852,5 @@ setInterval(() => {
   if (!document.activeElement || document.activeElement.id !== 'lvl') render();
 }, 500);
 applyTheme(); applyAccent(P.accent); render();
-if (!P.onboarded) onb();
+if (!P.onboarded && !window.LEVIA_SKIP_SETUP && !/skipsetup/.test(location.hash)) onb();
 </script>

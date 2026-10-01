@@ -792,7 +792,7 @@ This is Sara, our facility manager. She describes her building in the chat: thre
 
 [next slide: the app, live]
 After the trial, the company uses our app every day.
-[click "Start the night shift"] One tap starts the night. [click "Live map"] The map shows each floor: green is clean, red is booked. [click "3D model"] And this is the 3D model of the building that Levia built during its first scan: Sara can follow the robot through all three floors. [click "Schedule"] Levia follows the room calendar, [click "Robot in 3D"] and here Sara sees the robot itself in 3D, with the health of every part.
+[click "Start tonight's shift"] One tap starts the night. [click "Live map in 3D"] This is the 3D model of the building that Levia built during its first scan: Sara follows the robot through all three floors, and rooms turn green when they are clean. [click "Levia in 3D"] Here is the robot itself, with an alert pinned to any part that needs care. [click "Schedule"] Levia follows the room calendar, [click "Chat"] and the chat answers questions on how Levia works, or connects Sara to a person.
 In the customer app they can also name their robot, see their building and the robot in 3D, get alerts if a part needs care, and chat with our assistant.
 
 [next slide: QR codes]
@@ -902,7 +902,7 @@ const CAPS = [
   ['Air & scent', 'HEPA filtering plus a fragrance per room.', 'fly'],
 ];
 const SITE = [['Hero', 'Slogan and robot clip', 0], ['The film', 'One minute, with music', 836], ['How a night works', 'Six steps', 1792], ['Capabilities', 'Ten features', 2997], ['Product', 'Parts and safety', 3568], ['Pricing', 'From €457 a month', 4781], ['The app', 'Teaser and link', 5557], ['Free trial', 'Chat + 3D preview', 6472]];
-const APPSTEPS = [['1', 'Start the night shift', 'One tap, floors fill up live', 'home', 'start'], ['2', 'Live map', 'Follow the robot floor by floor', 'map', '2d'], ['3', '3D model', 'The building, from Levia’s first scan', 'map', '3d'], ['4', 'Schedule', 'Skips the booked meeting', 'schedule'], ['5', 'Robot in 3D', 'Every part, and its health', 'more', 'robot']];
+const APPSTEPS = [['1', 'Start tonight’s shift', 'One tap, floors fill up live', 'home', 'start'], ['2', 'Live map in 3D', 'The building, from Levia’s first scan', 'map'], ['3', 'Levia in 3D', 'Every part, with alerts', '3d', 'bot'], ['4', 'Schedule', 'Skips the booked meeting', 'schedule'], ['5', 'Chat', 'Help on how Levia works, or a person', 'chat']];
 const SEGS = [['Offices', 'Many floors, meeting rooms, after-hours cleaning.', 'Offices have <em>meeting rooms and locked areas</em> on every floor, and they are empty at night: the perfect window for Levia.'],
   ['Hotels', 'Corridors on every floor, guest lost property.', 'Hotels need <em>quiet, invisible cleaning</em> on many floors, and lost & found plus scent branding add direct value for guests.'],
   ['Shopping centres', 'Large atriums and high surfaces.', 'Malls have <em>big atriums and high surfaces</em> that floor robots can’t reach, and long overnight windows.'],
@@ -954,23 +954,30 @@ $('appsteps').innerHTML = APPSTEPS.map((s, i) => `<button data-app="${i}" aria-p
 let appLoaded = false;
 async function loadApp() {
   if (appLoaded) return; appLoaded = true;
-  try { const html = await (await fetch('app.html')).text(); $('appFrame').srcdoc = html.startsWith('<!doctype') ? html : '<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>' + html + '</body></html>'; }
+  if (!EMBED_SRCDOC) { $('appFrame').src = 'app.html#skipsetup'; return; }
+  try { const html = await (await fetch('app.html')).text(); $('appFrame').srcdoc = '<!doctype html><script>window.LEVIA_SKIP_SETUP = 1<\/script>' + html; }
   catch { $('appFallback').innerHTML = `The live app couldn’t load here. <a href="${LINKS.app}" target="_blank" rel="noopener" style="color:var(--led)">Open it in a new tab ↗</a>`; }
 }
 function appDo(i) {
   const s = APPSTEPS[i], doc = $('appFrame').contentDocument; document.querySelectorAll('[data-app]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.app === i)));
   if (!doc) return; const tab = doc.querySelector(`.tab[data-tab="${s[3]}"]`); if (tab) tab.click();
-  setTimeout(() => { if (s[4] === 'start') { const b = doc.getElementById('start'); if (b) b.click(); } if (s[4] === 'lost' || s[4] === 'robot') { const b = doc.querySelector(`[data-sub="${s[4]}"]`); if (b) b.click(); } if (s[4] === '2d' || s[4] === '3d') { const b = doc.querySelector(`[data-mapmode="${s[4]}"]`); if (b) b.click(); } }, 120);
+  setTimeout(() => {
+    if (s[4] === 'start') { const b = doc.getElementById('start'); if (b) b.click(); }
+    if (s[4] === 'bot') { const b = doc.querySelector('[data-v3="bot"]'); if (b) b.click(); }
+  }, 150);
 }
 $('appsteps').addEventListener('click', e => { const b = e.target.closest('[data-app]'); if (b) appDo(+b.dataset.app); });
 // embedded app and site ask this page to load the 3D building module
-window.LEVIA_LOAD_BUILDING = () => import('./levia-building.js');
-window.LEVIA_LOAD_VIEWER = () => import('./levia-viewer.js');
+// on normal hosting (GitHub Pages) the embedded pages load as real pages and import their own 3D;
+// on Claude's preview hosting they must be srcdoc and borrow this page's modules
+const EMBED_SRCDOC = !/github\.io|localhost|127\.0\.0\.1/.test(location.hostname);
+if (EMBED_SRCDOC) { window.LEVIA_LOAD_BUILDING = () => import('./levia-building.js'); window.LEVIA_LOAD_VIEWER = () => import('./levia-viewer.js'); }
 // trial chat: the real website runs in the frame; the presentation can start the demo visitor
 let siteLoaded = false;
 // loaded as srcdoc (like the app demo) so it shares this page's permissions and can load the 3D library
 async function loadSite() {
   if (siteLoaded) return; siteLoaded = true;
+  if (!EMBED_SRCDOC) { $('siteFrame').src = 'site.html#fastdemo'; return; }
   try { const html = await (await fetch('site.html')).text(); $('siteFrame').srcdoc = '<!doctype html><script>window.LEVIA_FAST = 1<\/script>' + html; }
   catch { $('siteFrame').src = 'site.html#fastdemo'; }
 }
