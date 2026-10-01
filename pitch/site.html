@@ -539,7 +539,7 @@ footer b{font-family:var(--display);color:var(--night-text);font-size:20px}
   }
 // inside the presentation, the parent page loads the 3D module for us; standalone (or cross-origin parent) we load it ourselves
 function loadBuilding() { try { if (window.parent !== window && window.parent.LEVIA_LOAD_BUILDING) return window.parent.LEVIA_LOAD_BUILDING(); } catch (e) {} return import('./levia-building.js'); }
-function showStill(stage, src) { stage.querySelectorAll('canvas').forEach(c => c.remove()); if (!stage.querySelector('img.still')) stage.insertAdjacentHTML('afterbegin', `<img class="still" src="${src}" alt="Levia" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`); }
+function showStill(stage, src) { stage.querySelectorAll('canvas').forEach(c => c.remove()); if (!stage.querySelector('.still')) stage.insertAdjacentHTML('afterbegin', `<video class="still" src="${src.replace('.jpg', '.mp4')}" poster="${src}" autoplay muted loop playsinline aria-label="Levia, animated preview" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>`); }
   function showModel(g, then) {
     const d = say('', 'bot', 'sum'); d.style.width = '100%';
     d.innerHTML = `<b>Your building · 3D preview</b><div style="font-size:13px;color:var(--muted)">${escapeHTML(A.company || 'Your company')} · ${escapeHTML(A.city || '')}</div><div class="mwrap" id="mwrap"><div class="mlabels" id="mlabels"></div><span class="mhint">Loading 3D…</span><button class="mbig" id="mbig" type="button">Expand</button><div class="mcap" id="mcap"></div></div>`;
@@ -550,7 +550,7 @@ function showStill(stage, src) { stage.querySelectorAll('canvas').forEach(c => c
     loadBuilding().then(({ mountBuilding }) => {
       night = null; model = mountBuilding(wrap, { floors: g.F, labelsEl: labels, getState: () => nightState(g) });
       wrap.querySelector('.mhint').textContent = 'Drag to rotate';
-    }).catch(() => { showStill(wrap, 'img/building.jpg'); wrap.querySelector('.mhint').textContent = 'Still image · 3D not available here'; });
+    }).catch(() => { showStill(wrap, 'img/building.jpg'); wrap.querySelector('.mhint').textContent = 'Animated preview'; });
     msgs.scrollTop = msgs.scrollHeight;
     botSay(`This preview is built from your answers and photos. At the site visit, Levia scans the real building in a few minutes and replaces it with an exact 3D model.${g.atrium ? '' : '\n\nYour floors have no open atrium, so the trial runs on one floor without flying.'}`, () => {
       const go = () => { $('cchips').innerHTML = ''; then(); };

@@ -968,7 +968,7 @@ $('appsteps').innerHTML = APPSTEPS.map((s, i) => `<button data-app="${i}" aria-p
 let appLoaded = false;
 async function loadApp() {
   if (appLoaded) return; appLoaded = true;
-  if (!EMBED_SRCDOC) { $('appFrame').src = 'app.html#skipsetup'; return; }
+  if (!EMBED_SRCDOC) { $('appFrame').src = `app.html?v=${BUILD}#skipsetup`; return; }
   try { const html = await (await fetch('app.html')).text(); $('appFrame').srcdoc = '<!doctype html><script>window.LEVIA_SKIP_SETUP = 1<\/script>' + html; }
   catch { $('appFallback').innerHTML = `The live app couldn’t load here. <a href="${LINKS.app}" target="_blank" rel="noopener" style="color:var(--led)">Open it in a new tab ↗</a>`; }
 }
@@ -984,6 +984,7 @@ $('appsteps').addEventListener('click', e => { const b = e.target.closest('[data
 // embedded app and site ask this page to load the 3D building module
 // on normal hosting (GitHub Pages) the embedded pages load as real pages and import their own 3D;
 // on Claude's preview hosting they must be srcdoc and borrow this page's modules
+const BUILD = '20261002b';   // bump on every release so browsers fetch fresh embedded pages
 const EMBED_SRCDOC = !/github\.io|localhost|127\.0\.0\.1/.test(location.hostname);
 if (EMBED_SRCDOC) { window.LEVIA_LOAD_BUILDING = () => import('./levia-building.js'); window.LEVIA_LOAD_VIEWER = () => import('./levia-viewer.js'); }
 // trial chat: the real website runs in the frame; the presentation can start the demo visitor
@@ -991,7 +992,7 @@ let siteLoaded = false;
 // loaded as srcdoc (like the app demo) so it shares this page's permissions and can load the 3D library
 async function loadSite() {
   if (siteLoaded) return; siteLoaded = true;
-  if (!EMBED_SRCDOC) { $('siteFrame').src = 'site.html#fastdemo'; return; }
+  if (!EMBED_SRCDOC) { $('siteFrame').src = `site.html?v=${BUILD}#fastdemo`; return; }
   try { const html = await (await fetch('site.html')).text(); $('siteFrame').srcdoc = '<!doctype html><script>window.LEVIA_FAST = 1<\/script>' + html; }
   catch { $('siteFrame').src = 'site.html#fastdemo'; }
 }
