@@ -138,6 +138,9 @@ svg.plan{width:100%;height:auto;display:block}
 .v3d.on{display:flex}
 .view.off{display:none}
 .stage3d{position:relative;height:330px;border-radius:22px;overflow:hidden;background:#0D1A22;flex:none}
+/* still image under every 3D view: shown while it loads, and kept if 3D can't run */
+#stage3d{background:#0D1A22 url(img/robot.jpg) center/cover no-repeat}
+#stageB{background:#0D1A22 url(img/building.jpg) center/cover no-repeat}
 .stage3d canvas{display:block;width:100%;height:100%;touch-action:none}
 .stage3d .tagname{position:absolute;left:12px;top:12px;background:rgba(8,16,22,.75);color:#EAF4F8;font-size:12px;font-weight:700;padding:6px 10px;border-radius:999px;display:flex;gap:6px;align-items:center}
 .stage3d .tagname i{width:8px;height:8px;border-radius:50%;background:var(--led)}
@@ -629,7 +632,7 @@ const stageBEl = document.getElementById('stageB'), qB = sel => stageBEl.querySe
 function ensureBld() {
   if (bld || bldLoading) return; bldLoading = true;
   import('./levia-building.js').then(({ mountBuilding }) => { bld = mountBuilding(stageBEl, { floors: FLOORS, labelsEl: qB('#blabels'), getState: bldState }); bld.setAccent(P.accent); qB('#hintB').textContent = 'Drag to rotate'; })
-    .catch(() => { qB('#hintB').textContent = '3D could not load here'; });
+    .catch(() => { qB('#hintB').textContent = 'Still image · 3D not available here'; });
 }
 function set3dMode(m) {
   v3mode = m; document.querySelectorAll('[data-v3]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v3 === m)));
@@ -643,7 +646,7 @@ function set3dMode(m) {
         onPart: (name, desc) => { $('mT').textContent = name; $('mD').textContent = desc || ''; },
         onAlert: a => { $('mT').textContent = a.title; $('mD').textContent = a.text; } });
       viewer.setAccent(P.accent); viewer.setAlerts(S.alerts); $('hint3d').textContent = 'Drag to rotate';
-    }).catch(() => { $('hint3d').textContent = '3D could not load here'; }); }
+    }).catch(() => { $('hint3d').textContent = 'Still image · 3D not available here'; }); }
 }
 function draw3dPanels() {
   const bad = new Set(S.alerts.map(a => a.part));

@@ -116,6 +116,9 @@ svg.plan{width:100%;height:auto;display:block}
 .seg button{border:none;background:none;border-radius:9px;padding:8px;font-weight:700;font-size:13px;color:var(--muted)}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .stage3d{position:relative;height:330px;border-radius:20px;overflow:hidden;background:#0D1A22}
+/* still image under every 3D view: shown while it loads, and kept if 3D can't run */
+.stage3d{background:#0D1A22 url(img/building.jpg) center/cover no-repeat}
+.stage3d.robot{background-image:url(img/robot.jpg)}
 .stage3d canvas{display:block;width:100%;height:100%;touch-action:none}
 .stage3d .plabels{position:absolute;inset:0;pointer-events:none}
 .stage3d .hint{position:absolute;left:12px;top:10px;color:#9DB4C0;font-size:11px}
@@ -383,7 +386,7 @@ function stage3d() {
   loadBuilding().then(({ mountBuilding }) => {
     bld = mountBuilding(bldEl, { floors: FLOORS, labelsEl: bldEl.querySelector('.plabels'), getState: bldState });
     bldEl.querySelector('.hint').textContent = 'Drag to rotate';
-  }).catch(() => { bldEl.querySelector('.hint').textContent = '3D model could not load here'; });
+  }).catch(() => { bldEl.querySelector('.hint').textContent = 'Still image · 3D not available here'; });
   return bldEl;
 }
 
@@ -392,14 +395,14 @@ let bot3d = null, botEl = null;
 function loadViewer() { try { if (window.parent !== window && window.parent.LEVIA_LOAD_VIEWER) return window.parent.LEVIA_LOAD_VIEWER(); } catch (e) {} return import('./levia-viewer.js'); }
 function stageBot() {
   if (botEl) return botEl;
-  botEl = document.createElement('div'); botEl.className = 'stage3d'; botEl.style.height = '280px'; botEl.innerHTML = '<div class="plabels"></div><div class="hint">Loading 3D…</div>';
+  botEl = document.createElement('div'); botEl.className = 'stage3d robot'; botEl.style.height = '280px'; botEl.innerHTML = '<div class="plabels"></div><div class="hint">Loading 3D…</div>';
   loadViewer().then(({ mountLevia }) => {
     bot3d = mountLevia(botEl, { labelsEl: botEl.querySelector('.plabels'),
       onMode: (m, info) => { S.pmT = info.t; S.pmD = info.d; const a = document.getElementById('pmT'), b = document.getElementById('pmD'); if (a) { a.textContent = info.t; b.textContent = info.d; } },
       onPart: (name, desc) => { const a = document.getElementById('pmT'), b = document.getElementById('pmD'); if (a) { a.textContent = name; b.textContent = desc || ''; } } });
     bot3d.setAlerts([{ part: 'Mop pad', level: 'amber', short: 'Mop pad 48%' }]);
     botEl.querySelector('.hint').textContent = 'Drag to rotate';
-  }).catch(() => { botEl.querySelector('.hint').textContent = '3D model could not load here'; });
+  }).catch(() => { botEl.querySelector('.hint').textContent = 'Still image · 3D not available here'; });
   return botEl;
 }
 

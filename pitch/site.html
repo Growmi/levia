@@ -362,7 +362,8 @@ footer b{font-family:var(--display);color:var(--night-text);font-size:20px}
 .thumbs img{width:100%;height:100%;object-fit:cover;display:block}
 .thumbs figcaption{position:absolute;left:0;right:0;bottom:0;font-size:10px;font-weight:700;padding:3px 6px;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff}
 .msg.me.ph{background:transparent;padding:0;max-width:92%}
-.mwrap{position:relative;height:240px;border-radius:14px;overflow:hidden;background:#0D1A22;margin-top:8px}
+/* still image under every 3D view: shown while it loads, and kept if 3D can't run */
+.mwrap{position:relative;height:240px;border-radius:14px;overflow:hidden;background:#0D1A22 url(img/building.jpg) center/cover no-repeat;margin-top:8px}
 .mwrap canvas{display:block;width:100%;height:100%;touch-action:none}
 .mwrap.big{position:fixed;inset:6vh 6vw;height:auto;z-index:80;box-shadow:0 0 0 100vmax rgba(0,0,0,.6);border-radius:20px}
 .mwrap .mlabels{position:absolute;inset:0;pointer-events:none}
@@ -548,7 +549,7 @@ function loadBuilding() { try { if (window.parent !== window && window.parent.LE
     loadBuilding().then(({ mountBuilding }) => {
       night = null; model = mountBuilding(wrap, { floors: g.F, labelsEl: labels, getState: () => nightState(g) });
       wrap.querySelector('.mhint').textContent = 'Drag to rotate';
-    }).catch(() => { wrap.querySelector('.mhint').textContent = '3D preview could not load here'; });
+    }).catch(() => { wrap.querySelector('.mhint').textContent = 'Still image · 3D not available here'; });
     msgs.scrollTop = msgs.scrollHeight;
     botSay(`This preview is built from your answers and photos. At the site visit, Levia scans the real building in a few minutes and replaces it with an exact 3D model.${g.atrium ? '' : '\n\nYour floors have no open atrium, so the trial runs on one floor without flying.'}`, () => {
       const go = () => { $('cchips').innerHTML = ''; then(); };
