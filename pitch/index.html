@@ -749,12 +749,12 @@ const SECTIONS = [
 const fmtMins = m => m === 1.5 ? '1:30' : String(m);
 const whoOf = sec => sec === 6 ? 'Backup' : names[sec];
 const store = { get(k, d) { try { const v = localStorage.getItem('levia-pitch:' + k); return v === null ? d : JSON.parse(v); } catch { return d; } }, set(k, v) { try { localStorage.setItem('levia-pitch:' + k, JSON.stringify(v)); } catch {} } };
-const NAMES_V = 2, DEFAULT_NAMES = ['Jay', 'Umberto', 'Carlo', 'Rosalie', 'Malak', 'Chiara'];
+const NAMES_V = 4, DEFAULT_NAMES = ['Jeanice', 'Umberto', 'Carlo', 'Kuanyu', 'Malak', 'Chiara'];
 let names = store.get('namesV', 0) === NAMES_V ? store.get('names', DEFAULT_NAMES) : DEFAULT_NAMES; store.set('namesV', NAMES_V); store.set('names', names);
 
 /* ---------- scripts (sections 2 and 4 written; the others are yours to paste) ---------- */
 const SCRIPTS = {
-  0: `JAY · THE PROBLEM · 1:30
+  0: `JEANICE · THE PROBLEM · 1:30
 
 [slide: the question]
 Let me start with a question. When you think about cleaning, what comes to mind?
@@ -774,7 +774,7 @@ So we asked ourselves: [click] what if cleaning did not depend on whether someon
   1: `UMBERTO · THE SOLUTION · 1:30
 
 [slide: Meet Levia]
-Thank you, Jay. Levia is a cleaning robot for offices, and it drives and flies.
+Thank you, Jeanice. Levia is a cleaning robot for offices, and it drives and flies.
 [click 5] On the floor it vacuums, washes with water, and then sanitizes with UV-C light. [click 2] LiDAR maps the building, [click 3] an AI camera recognises surfaces and lost items, [click 4] and its arm opens the doors. [click 1] To change floor, it flies through the atrium. [click 7] And at the end, it drives back into its Hub to recharge.
 
 [next slide: the film plays automatically, 1 minute]
@@ -797,8 +797,8 @@ In the customer app they can also name their robot, see their building and the r
 
 [next slide: QR codes]
 And you can try it yourselves: scan these codes with your phone to open the website, the customer app and the 3D walkthrough.
-Now Rosalie will go back to Sara.`,
-  3: `ROSALIE · SARA'S PROBLEMS, SOLVED · 1:30
+Now Kuanyu will go back to Sara.`,
+  3: `KUANYU · SARA'S PROBLEMS, SOLVED · 1:30
 
 [slide: Meet Sara]
 Meet Sara, facility manager of a three-floor office. Levia is made for people like her: businesses, not homes.
@@ -817,7 +817,7 @@ Malak will explain why Sara pays for it.`,
   4: `MALAK · WHY SARA PAYS & LAUNCH · 1:30
 
 [slide: Why Sara pays]
-Thank you, Rosalie. Let's look at the numbers for a 600 square meter office.
+Thank you, Kuanyu. Let's look at the numbers for a 600 square meter office.
 Today, a cleaning contract costs 14 to 22 euros per square meter a year: about 700 to 1,100 euros a month, and the quality still changes every night.
 [click] With Levia's continuous plan, Sara pays 457 euros a month for 36 months: 9 euros 13 per square meter a year. That includes the robot, the Hub, the app, maintenance and support. She supplies water and detergent herself, which keeps the price low.
 [click] Where do these numbers come from? Building one installation, robot plus Hub, costs us about 7,000 euros. A single night of cleaning for 600 square meters costs 672 euros, because then we supply water and detergent. The continuous plan spreads our costs over 36 months, so it is much cheaper per night.
@@ -847,7 +847,7 @@ Thank you. We are happy to take your questions.
   6: `BACKUP · NOT PRESENTED · USE THESE SLIDES TO ANSWER QUESTIONS
 Open them from the buttons at the bottom of the "Questions" slide. "Overview" summarises model, market, feasibility and funding, with "Details →" on each card. "← Back to questions" returns to the end.
 
-BUSINESS MODEL (Rosalie)
+BUSINESS MODEL (Kuanyu)
 Levia falls into a Blue Ocean strategy: we expand the boundaries of the existing concept. Levia-as-a-Service is B2B. It includes the hardware, the management app, maintenance and repair, software and AI updates, and technical support. Customers buy an autonomous cleaning capability, not just a machine.
 
 MARKET SCOPE (Malak)
@@ -859,7 +859,7 @@ About €20.5M of equity: pre-seed €0.6M (2033), seed €2.9M (2034–35), Ser
 FEASIBILITY (Chiara)
 Battery: cleans mainly on wheels and flies only between floors, target 6–8 hours. Weight: carries little water and refills at the Hub. Noise: short flights, mainly at night. Safety: guarded rotors and 360° sensors stop the flight. Dust: vacuums on the ground, flies only when needed. Levia doesn't fly to clean: it flies to reach the next cleaning area.
 
-ADVANTAGES (Rosalie)
+ADVANTAGES (Kuanyu)
 Multi-floor autonomy, all-in-one cleaning (vacuum, wash, UV-C), AI that recognises surfaces and objects, and control from an app.
 
 3D PROTOTYPE and ONE NIGHT (Umberto)
@@ -977,7 +977,7 @@ async function loadSite() {
 function siteChat() { try { return $('siteFrame').contentWindow.leviaChat; } catch { return null; } }
 $('chatDemo').onclick = () => { loadSite(); const go = () => { const c = siteChat(); if (c) c.demo(); else setTimeout(go, 300); }; go(); };
 $('chatOpen').onclick = () => { loadSite(); const c = siteChat(); if (c) c.open(); };
-// cleaning cost benchmark (Jay's slide): €14–22 per m² per year
+// cleaning cost benchmark (Jeanice's slide): €14–22 per m² per year
 function costCalc() { const a = +$('costArea').value; $('costAreaV').textContent = a.toLocaleString('en-GB') + ' m²';
   $('costV').textContent = `€${Math.round(a * 14 / 1000)}k – €${Math.round(a * 22 / 1000)}k`; $('costTxt').textContent = `${a.toLocaleString('en-GB')} m² × €14–22 per m² per year`; }
 $('costArea').addEventListener('input', costCalc); costCalc();
