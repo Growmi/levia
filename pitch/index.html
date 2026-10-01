@@ -465,7 +465,7 @@ p{margin:0}
     <div class="speaker-tag" data-who="1"></div>
     <div class="eyebrow">See it in action · 1 minute · plays automatically</div>
     <h2 style="margin-top:16px">One night, three floors</h2>
-    <div class="player"><video id="film" src="film.mp4" poster="img/wide.jpg" preload="auto" playsinline controls aria-label="Levia explainer film"></video><button class="big" id="filmPlay" aria-label="Play the film"><span><svg viewBox="0 0 24 24" fill="#04121A"><path d="M6 4l15 8-15 8z"/></svg></span></button></div>
+    <div class="player"><video id="film" src="film.mp4" poster="img/wide.jpg" preload="auto" playsinline controls aria-label="Levia explainer film"></video></div>
   </section>
 
   <section class="slide" id="s-site" data-sec="2" data-steps="0" aria-label="The website">
@@ -944,8 +944,6 @@ function showPersona(k) { const P = PERSONA[k]; $('tabToday').setAttribute('aria
   $('plist').innerHTML = P.items.map(([ic, b, s]) => `<div class="pitem ${P.cls}"><i>${ic}</i><div><b>${b}</b><span>${s}</span></div></div>`).join(''); $('pquote').textContent = P.quote; }
 $('tabToday').onclick = () => showPersona('today'); $('tabLevia').onclick = () => showPersona('levia'); showPersona('today');
 // film
-$('filmPlay').onclick = () => { const v = $('film'); v.play().catch(() => {}); $('filmPlay').hidden = true; };
-$('film').addEventListener('play', () => $('filmPlay').hidden = true);
 // website
 $('sitenav').innerHTML = SITE.map((s, i) => `<button data-site="${i}" aria-pressed="${i === 0}">${s[0]}<small>${s[1]}</small></button>`).join('') + `<a class="chipbtn" href="${LINKS.site}" target="_blank" rel="noopener" style="text-decoration:none;text-align:center;font-size:22px;margin-top:6px">Open the live website ↗</a>`;
 function showSite(i) { const scr = $('siteScr'), img = $('siteImg'); const scale = scr.clientWidth / 1100 || 1; const maxY = img.naturalHeight * (scr.clientWidth / img.naturalWidth) - scr.clientHeight;
@@ -999,7 +997,7 @@ function show(i, s = 0) {
   if (slides[i].id === 's-chat') loadSite();
   if (slides[i].id === 's-site') requestAnimationFrame(() => showSite(+(document.querySelector('[data-site][aria-pressed="true"]')?.dataset.site || 0)));
   { const v = $('film');
-    if (slides[i].id === 's-film') { $('filmPlay').hidden = true; try { v.currentTime = 0; } catch {} v.play().catch(() => { $('filmPlay').hidden = false; }); }
+    if (slides[i].id === 's-film') { try { v.currentTime = 0; } catch {} v.play().catch(() => { v.muted = true; v.play().catch(() => {}); }); }   // if sound autoplay is blocked, play muted
     else if (!v.paused) v.pause(); }
   dispatchEvent(new CustomEvent('levia-slide', { detail: slides[i].id }));
   if (slides[i].id !== 's-night') stopNight();
