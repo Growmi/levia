@@ -119,6 +119,11 @@ svg.plan{width:100%;height:auto;display:block}
 .stage3d canvas{display:block;width:100%;height:100%;touch-action:none}
 .stage3d .plabels{position:absolute;inset:0;pointer-events:none}
 .stage3d .hint{position:absolute;left:12px;top:10px;color:#9DB4C0;font-size:11px}
+.plabel{position:absolute;left:0;top:0;margin:-11px 0 0 8px;white-space:nowrap;background:rgba(8,16,22,.9);border:1px solid rgba(79,195,247,.5);color:#EAF4F8;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;transition:opacity .3s;cursor:pointer;opacity:0}
+.palert{position:absolute;left:0;top:0;display:flex;align-items:center;gap:6px;margin:-12px 0 0 -8px;white-space:nowrap;font-size:11px;font-weight:700;padding:3px 9px 3px 4px;border-radius:999px;color:#fff;background:#C77A12}
+.palert i{width:12px;height:12px;border-radius:50%;background:#FFE7BF}
+.pmodes{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.pmodes .chip{white-space:nowrap}
 .rlabel{position:absolute;left:0;top:0;white-space:nowrap;background:rgba(8,16,22,.82);color:#EAF4F8;font-size:10px;font-weight:600;padding:2px 7px;border-radius:999px;pointer-events:none;transition:opacity .3s;opacity:0;margin:-9px 0 0 -20px}
 .rlabel.floor{font-size:11px;font-weight:800;background:none;color:#9DB4C0;margin:-8px 0 0 -52px}
 .rlabel.bot{background:#127FB0;margin:-10px 0 0 -18px}
@@ -174,7 +179,7 @@ const PLAN = [
   ['F1', 'lobby', 2, 26], ['F2', 'office', 30, 52], ['F2', 'server', 52, 64], ['F3', 'break', 68, 84], ['F3', 'lounge', 84, 98], ['F1', 'meetA', 104, 118],
 ];
 const S = {
-  tab: 'home', sub: null, running: false, min: 0, floorView: 'F2', speed: 1,
+  tab: 'home', sub: null, running: false, min: 0, floorView: 'F2', speed: 1, mapMode: '3d',
   done: {}, battery: 96, notes: [], scent: 'cedar', scentLevel: 40, keysCollected: false,
   rules: { server: { lock: true, quiet: false, nightly: true }, meetA: { lock: false, quiet: false, nightly: true, calendar: true }, lounge: { lock: false, quiet: true, nightly: true }, office: { lock: false, quiet: false, nightly: true } },
 };
@@ -238,6 +243,7 @@ function home() {
       ? `<button class="btn btn-ghost" id="pause" style="flex:1">${S.paused ? 'Resume' : 'Pause'}</button><button class="btn btn-ghost" id="faster" style="flex:1">${S.speed > 1 ? 'Normal speed' : 'Fast-forward'}</button>`
       : S.min >= 118 ? `<button class="btn btn-ghost" id="report" style="flex:1">Open night report</button>` : `<button class="btn btn-primary" id="start" style="flex:1">Start night shift</button>`}</div>
   </div>
+  <div id="slot3d"></div>
   <div class="card"><div class="floors">${floorBars()}</div></div>
   <div class="grid2">
     <button class="card stat" data-go="map" style="text-align:left"><b>${c.floor}</b><span>Robot location</span></button>
@@ -315,7 +321,7 @@ function moreView() {
     <button data-sub="lost"><span><b>Lost & found</b><small>${S.min >= 41 && !S.keysCollected ? '1 item at reception' : 'No items waiting'}</small></span>›</button>
     <button data-sub="air"><span><b>Air & scent</b><small>${S.scentLabel || 'Cedar & Bergamot'} · ${S.scentLevel}%</small></span>›</button>
     <button data-sub="report"><span><b>Night report</b><small>${S.min >= 118 ? 'Ready' : 'Available after the shift'}</small></span>›</button>
-    <button data-sub="robot"><span><b>Robot & Hub</b><small>Battery ${S.battery}% · water ${S.min >= 118 ? '100' : Math.max(20, Math.round(100 - S.min * .6))}% · bins ${S.min >= 118 ? 'emptied' : 'ok'}</small></span>›</button>
+    <button data-sub="robot"><span><b>Robot & Hub · 3D</b><small>Battery ${S.battery}% · water ${S.min >= 118 ? '100' : Math.max(20, Math.round(100 - S.min * .6))}% · bins ${S.min >= 118 ? 'emptied' : 'ok'}</small></span>›</button>
   </div><div class="sample">Sample data</div>`;
 }
 function lostView() {
@@ -349,7 +355,10 @@ function reportView() {
   </div><div class="sample">Sample report</div>`;
 }
 function robotView() {
-  return `<button class="back" data-sub="">‹ More</button><h1>Robot & Hub</h1><div class="sub">Levia · HQ Building</div>
+  return `<button class="back" data-sub="">‹ More</button><h1>Robot & Hub</h1><div class="sub">Levia · HQ Building · drag the 3D model to rotate</div>
+  <div id="slotBot"></div>
+  <div class="pmodes" role="group" aria-label="Show mode">${[['floor', 'Vacuum'], ['mop', 'Wash'], ['uv', 'UV-C'], ['flight', 'Flight'], ['arm', 'Arm'], ['hub', 'Hub'], ['explode', 'Parts']].map(([m, n]) => `<button class="chip" data-pmode="${m}" aria-pressed="${(S.pmode || 'floor') === m}">${n}</button>`).join('')}</div>
+  <div class="card"><b style="font-size:14px" id="pmT">${esc(S.pmT || 'Floor mode')}</b><div class="sub" style="margin:4px 0 0;line-height:1.5" id="pmD">${esc(S.pmD || '')}</div></div>
   <div class="grid2"><div class="card stat"><b>${S.battery}%</b><span>Battery</span></div><div class="card stat"><b>${current().floor}</b><span>Location</span></div></div>
   <div class="card list">${[['Ducted fans', 'ok', 'Guards intact'], ['LiDAR + camera', 'ok', 'Calibrated'], ['Side brushes', S.min > 90 ? 'amber' : 'ok', S.min > 90 ? 'Swap soon' : 'Good'], ['Robotic arm', 'ok', 'Ready'], ['Water tank', S.min > 100 && S.min < 118 ? 'amber' : 'ok', S.min >= 118 ? 'Refilled at the Hub' : `${Math.max(20, Math.round(100 - S.min * .6))}% · mopping`], ['Hub bins', 'ok', S.min >= 118 ? 'Emptied and sorted' : 'Space available']].map(([n, k, d]) =>
     `<div class="item"><div><b>${n}</b><small>${d}</small></div><span class="pill p-${k}"><i></i>${k === 'ok' ? 'OK' : 'Check'}</span></div>`).join('')}</div>
@@ -378,12 +387,29 @@ function stage3d() {
   return bldEl;
 }
 
+// ---------- 3D model of the robot ----------
+let bot3d = null, botEl = null;
+function loadViewer() { try { if (window.parent !== window && window.parent.LEVIA_LOAD_VIEWER) return window.parent.LEVIA_LOAD_VIEWER(); } catch (e) {} return import('./levia-viewer.js'); }
+function stageBot() {
+  if (botEl) return botEl;
+  botEl = document.createElement('div'); botEl.className = 'stage3d'; botEl.style.height = '280px'; botEl.innerHTML = '<div class="plabels"></div><div class="hint">Loading 3D…</div>';
+  loadViewer().then(({ mountLevia }) => {
+    bot3d = mountLevia(botEl, { labelsEl: botEl.querySelector('.plabels'),
+      onMode: (m, info) => { S.pmT = info.t; S.pmD = info.d; const a = document.getElementById('pmT'), b = document.getElementById('pmD'); if (a) { a.textContent = info.t; b.textContent = info.d; } },
+      onPart: (name, desc) => { const a = document.getElementById('pmT'), b = document.getElementById('pmD'); if (a) { a.textContent = name; b.textContent = desc || ''; } } });
+    bot3d.setAlerts([{ part: 'Mop pad', level: 'amber', short: 'Mop pad 48%' }]);
+    botEl.querySelector('.hint').textContent = 'Drag to rotate';
+  }).catch(() => { botEl.querySelector('.hint').textContent = '3D model could not load here'; });
+  return botEl;
+}
+
 // ---------- render + events ----------
 function render() {
   const v = $('view'), scroll = v.scrollTop, keep = S.lastView === S.tab + (S.sub || '');
   const map = { home, map: mapView, schedule: scheduleView, rules: rulesView, more: () => ({ lost: lostView, air: airView, report: reportView, robot: robotView }[S.sub] || moreView)() };
   v.innerHTML = map[S.tab]();
   const slot = document.getElementById('slot3d'); if (slot) slot.appendChild(stage3d()); if (bld) bld.setActive(!!slot);
+  const slotB = document.getElementById('slotBot'); if (slotB) slotB.appendChild(stageBot()); if (bot3d) bot3d.setActive(!!slotB);
   if (keep) v.scrollTop = scroll; else v.scrollTop = 0;
   S.lastView = S.tab + (S.sub || '');
   document.querySelectorAll('.tab').forEach(t => { if (t.dataset.tab === S.tab) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
@@ -400,6 +426,7 @@ $('view').addEventListener('click', e => {
   else if (t.id === 'sendTo') toast('led', S.running ? `Levia will continue on ${FLOORS[S.floorView].name}` : 'Start the night shift first');
   else if (t.dataset.go) { if (t.dataset.go === 'lost') { S.tab = 'more'; S.sub = 'lost'; } else S.tab = t.dataset.go; }
   else if (t.dataset.mapmode) { S.mapMode = t.dataset.mapmode; if (S.mapMode === '3d' && bld) bld.replayScan(); }
+  else if (t.dataset.pmode) { S.pmode = t.dataset.pmode; if (bot3d) bot3d.setMode(S.pmode); }
   else if (t.dataset.floor && S.mapMode === '3d') { S.floor3d = t.dataset.floor; if (bld) bld.setFloor(S.floor3d); }
   else if (t.dataset.floor) S.floorView = t.dataset.floor;
   else if (t.dataset.sub !== undefined) S.sub = t.dataset.sub || null;
