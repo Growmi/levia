@@ -1,0 +1,38 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Levia · Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Figtree:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#0B1218;--card:#131D24;--line:#26343D;--ink:#E5EDF1;--muted:#97A8B2;--led:#4FC3F7}
+:root[data-theme="light"]{--bg:#EEF2F4;--card:#FFFFFF;--line:#DCE3E8;--ink:#0F1A22;--muted:#5C6B74;--led:#127FB0}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#EEF2F4;--card:#FFFFFF;--line:#DCE3E8;--ink:#0F1A22;--muted:#5C6B74;--led:#127FB0}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Figtree,Arial,sans-serif}
+main{max-width:980px;margin:0 auto;padding:48px 16px 64px}
+h1{font-family:Syne,sans-serif;font-size:clamp(44px,8vw,72px);margin:0}
+.slogan{font-family:Syne,sans-serif;font-size:24px;color:var(--led);margin-top:6px}
+p{color:var(--muted);line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:28px}
+a.card{display:block;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;text-decoration:none;color:var(--ink)}
+a.card:hover,a.card:focus-visible{border-color:var(--led)}
+a.card b{font-size:19px;display:block}
+a.card span{color:var(--muted);font-size:14px}
+a.card em{font-style:normal;font-size:12px;letter-spacing:1.4px;color:var(--led);font-weight:700;display:block;margin-bottom:6px}
+</style>
+<main>
+  <h1>Levia</h1>
+  <div class="slogan">Cleaning on another level.</div>
+  <p>The flying cleaning robot for offices and multi-floor business buildings. All prototypes of the project, in one place.</p>
+  <div class="grid">
+    <a class="card" href="pitch/"><em>PRESENTATION</em><b>Live pitch</b><span>The interactive presentation, with scripts for each speaker</span></a>
+    <a class="card" href="site/"><em>WEBSITE</em><b>levia.com</b><span>Trial chat with a 3D preview of your building</span></a>
+    <a class="card" href="business-app/"><em>CUSTOMER APP</em><b>Levia for Business</b><span>Name your robot, 3D building and robot, alerts, chat</span></a>
+    <a class="card" href="app/"><em>FACILITY APP</em><b>Sara’s app</b><span>Night shift, live map, 3D model, rules, lost & found</span></a>
+    <a class="card" href="walkthrough/"><em>3D</em><b>3D walkthrough</b><span>One night in the office, step by step</span></a>
+    <a class="card" href="pricing/"><em>BUSINESS</em><b>Pricing & funding</b><span>Costs, prices and investment</span></a>
+    <a class="card" href="ops/"><em>INTERNAL</em><b>Levia Ops</b><span>The app for Levia’s own team</span></a>
+  </div>
+</main>

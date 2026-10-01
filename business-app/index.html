@@ -1,0 +1,846 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Levia for Business</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --ground:#E9EEF1; --surface:#FFFFFF; --surface-2:#F4F7F9; --ink:#0F1A22; --muted:#5C6B74; --line:#DCE3E8;
+  --led:#127FB0; --led-soft:#E2F2FA; --amber:#B86E10; --amber-soft:#FCF0DD; --ok:#22834A; --ok-soft:#E1F3E8; --alert:#C23B32; --alert-soft:#FBE7E5; --violet:#7A4FA8; --violet-soft:#F1E9F8;
+  --phone:#10161B; --shadow:0 30px 70px rgba(15,26,34,.18);
+  --display:'Syne','Trebuchet MS',sans-serif; --body:'Figtree','Helvetica Neue',Arial,sans-serif; --mono:'JetBrains Mono',Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  color-scheme:dark; --ground:#0A1116; --surface:#131D24; --surface-2:#1A262E; --ink:#E5EDF1; --muted:#97A8B2; --line:#26343D;
+  --led:#4FC3F7; --led-soft:#12303E; --amber:#F2B24A; --amber-soft:#3A2B12; --ok:#5AC878; --ok-soft:#163223; --alert:#F0776E; --alert-soft:#3B1C1A; --violet:#C9A2E0; --violet-soft:#2C2238; --phone:#05080B; --shadow:0 30px 70px rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark; --ground:#0A1116; --surface:#131D24; --surface-2:#1A262E; --ink:#E5EDF1; --muted:#97A8B2; --line:#26343D;
+  --led:#4FC3F7; --led-soft:#12303E; --amber:#F2B24A; --amber-soft:#3A2B12; --ok:#5AC878; --ok-soft:#163223; --alert:#F0776E; --alert-soft:#3B1C1A; --violet:#C9A2E0; --violet-soft:#2C2238; --phone:#05080B; --shadow:0 30px 70px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--led);outline-offset:2px}
+.wrap{min-height:100%;display:flex;align-items:center;justify-content:center;gap:56px;padding-block:16px;padding-inline:24px;flex-wrap:wrap}
+.intro{max-width:340px;display:flex;flex-direction:column;gap:14px}
+.intro .brand{font-family:var(--display);font-weight:800;font-size:40px;letter-spacing:.5px}
+.intro .tag{font-family:var(--mono);font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:var(--led)}
+.intro p{margin:0;color:var(--muted);line-height:1.55;font-size:15px}
+.intro ul{margin:0;padding-left:18px;color:var(--ink);line-height:1.8;font-size:14px}
+.intro small{color:var(--muted);font-size:12px}
+.phone{width:min(390px,calc((100vh - 32px) * .48));height:min(812px,calc(100vh - 32px));max-width:100%;background:var(--phone);border-radius:54px;padding:12px;box-shadow:var(--shadow);flex:none}
+.screen{position:relative;width:100%;height:100%;border-radius:42px;overflow:hidden;background:var(--ground);display:flex;flex-direction:column}
+.status{display:flex;justify-content:space-between;align-items:center;padding:14px 26px 6px;font-family:var(--mono);font-size:13px;font-weight:600}
+.island{width:110px;height:30px;border-radius:20px;background:#000}
+.view{flex:1;overflow-y:auto;padding:6px 16px 16px;display:flex;flex-direction:column;gap:12px;scrollbar-width:none}
+.view::-webkit-scrollbar{display:none}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);background:var(--surface);border-top:1px solid var(--line);padding:8px 6px 22px}
+.tab{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;color:var(--muted);padding:4px 0}
+.tab svg{width:22px;height:22px}
+.tab[aria-current="page"]{color:var(--led)}
+h1{font-family:var(--display);font-size:26px;margin:4px 2px 0;font-weight:700}
+h2{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:6px 2px 0;font-weight:700}
+.sub{color:var(--muted);font-size:13px;margin:-6px 2px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:14px}
+.row{display:flex;align-items:center;gap:10px}
+.between{justify-content:space-between}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:600}
+.pill i{width:8px;height:8px;border-radius:50%;background:currentColor}
+.p-ok{background:var(--ok-soft);color:var(--ok)} .p-led{background:var(--led-soft);color:var(--led)} .p-amber{background:var(--amber-soft);color:var(--amber)} .p-alert{background:var(--alert-soft);color:var(--alert)} .p-violet{background:var(--violet-soft);color:var(--violet)}
+.hero{background:linear-gradient(160deg,#0F2230,#0B1820);color:#EAF2F6;border:none}
+.hero .big{font-family:var(--display);font-size:22px;font-weight:700}
+.hero .muted{color:#9DB4C0;font-size:13px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:6px;background:var(--surface-2);overflow:hidden;flex:1}
+.bar i{display:block;height:100%;border-radius:6px;background:var(--led);transition:width .6s ease}
+.floors{display:flex;flex-direction:column;gap:9px}
+.frow{display:grid;grid-template-columns:30px 1fr 44px;align-items:center;gap:10px;font-size:13px;font-weight:600}
+.btn{border:none;border-radius:14px;padding:12px 14px;font-weight:700;font-size:14px}
+.btn-primary{background:var(--led);color:#fff}
+:root[data-theme="dark"] .btn-primary{color:#05131B}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .btn-primary{color:#05131B} }
+.btn-ghost{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat b{font-family:var(--mono);font-size:20px}
+.stat span{font-size:12px;color:var(--muted)}
+.feed{display:flex;flex-direction:column;gap:8px}
+.note{display:grid;grid-template-columns:12px 1fr auto;gap:10px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.note i{width:10px;height:10px;border-radius:50%;margin-top:5px}
+.note b{display:block;font-size:14px}
+.note small{color:var(--muted);font-size:12px}
+.note time{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+svg.plan{width:100%;height:auto;display:block}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px}
+.list{display:flex;flex-direction:column}
+.item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 2px;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:none}
+.item b{font-size:14px;display:block}
+.item small{font-size:12px;color:var(--muted)}
+.switch{position:relative;width:46px;height:28px;border-radius:999px;border:none;background:var(--line);flex:none;transition:background .2s}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
+.switch[aria-checked="true"]{background:var(--ok)}
+.switch[aria-checked="true"]::after{transform:translateX(18px)}
+.cal{display:grid;grid-template-columns:44px 1fr;gap:0;font-size:12px}
+.cal .h{font-family:var(--mono);color:var(--muted);height:34px;border-top:1px solid var(--line);padding-top:2px}
+.cal .slot{position:relative;height:34px;border-top:1px solid var(--line)}
+.ev{position:absolute;border-radius:10px;padding:6px 8px;font-size:12px;font-weight:600;overflow:hidden;box-sizing:border-box}
+.ev small{display:block;font-weight:500;opacity:.85}
+.range{width:100%;accent-color:var(--violet)}
+.scent{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.scent button{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:12px;text-align:left}
+.scent button[aria-pressed="true"]{border-color:var(--violet);background:var(--violet-soft)}
+.scent b{display:block;font-size:14px}
+.scent small{color:var(--muted);font-size:12px}
+.keyimg{width:56px;height:56px;border-radius:14px;background:var(--amber-soft);display:grid;place-items:center;flex:none}
+.toast{position:absolute;left:14px;right:14px;top:58px;background:var(--ink);color:var(--surface);border-radius:16px;padding:12px 14px;font-size:14px;font-weight:600;display:flex;gap:10px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.25);transform:translateY(-140%);transition:transform .35s ease;z-index:5}
+.toast:not(.show){visibility:hidden;transition:transform .35s ease,visibility 0s .35s}
+.toast.show{transform:none}
+.toast i{width:10px;height:10px;border-radius:50%;flex:none}
+.sample{font-size:11px;color:var(--muted);text-align:center;margin-top:2px}
+.menu{display:flex;flex-direction:column;gap:8px}
+.menu button{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:left}
+.menu b{font-size:15px;display:block}
+.menu small{color:var(--muted);font-size:12px}
+.back{background:none;border:none;color:var(--led);font-weight:700;font-size:14px;padding:6px 2px;align-self:flex-start}
+@media (max-width: 560px){
+  .wrap{padding:0;gap:0;display:block;height:100%}
+  .intro{display:none}
+  .phone{width:100%;height:100vh;height:100dvh;border-radius:0;padding:0;box-shadow:none;background:var(--ground)}
+  .island{display:none}
+  .screen{border-radius:0}
+  .status{padding-top:calc(10px + env(safe-area-inset-top,0px))}
+  .tabs{padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+}
+@media (prefers-reduced-motion: reduce){ .toast,.bar i,.switch,.switch::after{transition:none} }
+</style>
+<style>
+/* customer accent: chosen at onboarding, applied everywhere */
+:root{--accent:#127FB0;--led:var(--accent);--led-soft:color-mix(in srgb,var(--accent) 13%,var(--surface))}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--led:color-mix(in srgb,var(--accent) 62%,#fff);--led-soft:color-mix(in srgb,var(--accent) 28%,var(--surface))}}
+:root[data-theme="dark"]{--led:color-mix(in srgb,var(--accent) 62%,#fff);--led-soft:color-mix(in srgb,var(--accent) 28%,var(--surface))}
+:root .screen .btn-primary{background:var(--accent);color:#fff}
+.hero{background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 38%,#0B1820),#0B1820)}
+.tab[aria-current="page"]{color:var(--led)}
+.robotbtn{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px 12px 8px 8px;text-align:left}
+.robotbtn .dot,.avatar{width:34px;height:34px;border-radius:11px;background:var(--led-soft);display:grid;place-items:center;flex:none;color:var(--led)}
+.robotbtn b{display:block;font-size:14px}.robotbtn small{font-size:12px;color:var(--muted)}
+.v3d{flex:1;overflow-y:auto;padding:6px 16px 16px;display:none;flex-direction:column;gap:12px;scrollbar-width:none}
+.v3d.on{display:flex}
+.view.off{display:none}
+.stage3d{position:relative;height:330px;border-radius:22px;overflow:hidden;background:#0D1A22;flex:none}
+.stage3d canvas{display:block;width:100%;height:100%;touch-action:none}
+.stage3d .tagname{position:absolute;left:12px;top:12px;background:rgba(8,16,22,.75);color:#EAF4F8;font-size:12px;font-weight:700;padding:6px 10px;border-radius:999px;display:flex;gap:6px;align-items:center}
+.stage3d .tagname i{width:8px;height:8px;border-radius:50%;background:var(--led)}
+.stage3d .hint{position:absolute;right:12px;bottom:10px;color:#9DB4C0;font-size:11px}
+.plabels{position:absolute;inset:0;pointer-events:none}
+.plabel{position:absolute;left:0;top:0;margin:-11px 0 0 8px;white-space:nowrap;background:rgba(8,16,22,.9);border:1px solid color-mix(in srgb,var(--led) 60%,transparent);color:#EAF4F8;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;transition:opacity .3s;cursor:pointer;opacity:0}
+.modes{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:none}
+.modes::-webkit-scrollbar{display:none}
+.modes .chip{white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--led);border-color:var(--led);color:#fff}
+.hp{display:grid;grid-template-columns:1fr 70px 40px;gap:10px;align-items:center;font-size:13px;padding:9px 2px;border-bottom:1px solid var(--line)}
+.hp:last-child{border-bottom:none}
+.hp .bar{height:6px}
+.field{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600}
+.field input,.field select,.field textarea{border:1px solid var(--line);background:var(--surface-2);border-radius:12px;padding:11px 12px;font-weight:500;font-size:15px}
+.field textarea{min-height:80px;resize:vertical}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}
+.swatches button{width:40px;height:40px;border-radius:50%;border:3px solid var(--surface);box-shadow:0 0 0 1px var(--line)}
+.swatches button[aria-pressed="true"]{box-shadow:0 0 0 3px var(--ink)}
+.mtable{display:grid;grid-template-columns:1fr repeat(3,44px);gap:8px 6px;align-items:center;font-size:13px}
+.mtable .h{font-size:11px;color:var(--muted);font-weight:700;text-align:center}
+.mt{width:44px;height:32px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);font-size:11px;font-weight:700;color:var(--muted)}
+.mt[aria-pressed="true"]{background:var(--led-soft);border-color:var(--led);color:var(--led)}
+.onb{position:absolute;inset:0;z-index:8;background:rgba(5,10,14,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.onb[hidden]{display:none}
+.onbcard{width:100%;max-height:100%;overflow-y:auto;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.onbcard h1{font-size:22px;margin:0}
+.onbcard .ogrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.onbcard .ogrid>*{min-width:0}
+.onbcard .field input{width:100%}
+.onbcard .field input{padding:9px 10px;font-size:14px;min-width:0}
+.onbcard .swatches button{width:32px;height:32px}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:7;background:var(--surface);border-radius:24px 24px 0 0;padding:18px 16px 30px;box-shadow:0 -10px 40px rgba(0,0,0,.25);transform:translateY(105%);transition:transform .3s ease;display:flex;flex-direction:column;gap:10px}
+.sheet.show{transform:none}
+.scrim{position:absolute;inset:0;z-index:6;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .3s}
+.scrim.show{opacity:1;pointer-events:auto}
+.planc{background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 38%,#0B1820),#0B1820);color:#EAF2F6;border:none}
+.planc .price{font-family:var(--display);font-size:30px;font-weight:700}
+.planc small{color:#9DB4C0}
+.tabs{grid-template-columns:repeat(6,1fr)}
+.tab{font-size:10.5px}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:3px;flex:none}
+.seg button{border:none;background:none;border-radius:9px;padding:8px;font-weight:700;font-size:13px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.pane{display:flex;flex-direction:column;gap:12px}
+.pane[hidden]{display:none}
+.rlabel{position:absolute;left:0;top:0;transform-origin:0 0;white-space:nowrap;background:rgba(8,16,22,.82);color:#EAF4F8;font-size:10px;font-weight:600;padding:2px 7px;border-radius:999px;pointer-events:none;transition:opacity .3s;opacity:0;margin:-9px 0 0 -20px}
+.rlabel.floor{font-size:11px;font-weight:800;background:none;color:#9DB4C0;margin:-8px 0 0 -52px}
+.rlabel.bot{background:var(--accent);margin:-10px 0 0 -18px}
+.palert{position:absolute;left:0;top:0;display:flex;align-items:center;gap:6px;margin:-12px 0 0 -8px;white-space:nowrap;font-size:11px;font-weight:700;padding:3px 9px 3px 4px;border-radius:999px;cursor:pointer;color:#fff;transition:opacity .3s}
+.palert i{width:14px;height:14px;border-radius:50%;background:#fff;position:relative;flex:none}
+.palert i::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid #fff;animation:ping 1.4s ease-out infinite}
+.palert.red{background:#D93A30}.palert.red i{background:#FFD7D3}
+.palert.amber{background:#C77A12}.palert.amber i{background:#FFE7BF}
+@keyframes ping{from{transform:scale(.6);opacity:1}to{transform:scale(1.6);opacity:0}}
+.alert{display:grid;grid-template-columns:12px 1fr;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.alert:last-child{border-bottom:none}
+.alert>i{width:10px;height:10px;border-radius:50%;margin-top:5px}
+.alert b{font-size:14px;display:block}.alert small{font-size:12px;color:var(--muted);display:block;margin-top:1px}
+.alert .acts{display:flex;gap:6px;margin-top:8px}
+.alert .acts button{border:1px solid var(--line);background:var(--surface-2);border-radius:9px;padding:6px 10px;font-size:12px;font-weight:700}
+.chatview{padding-bottom:0}
+.msgs{display:flex;flex-direction:column;gap:8px;flex:1}
+.msg{max-width:84%;padding:10px 12px;border-radius:16px;font-size:14px;line-height:1.45}
+.msg.bot{background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:5px;align-self:flex-start}
+.msg.me{background:var(--accent);color:#fff;border-bottom-right-radius:5px;align-self:flex-end}
+.msg.agent{background:var(--violet-soft);border-bottom-left-radius:5px;align-self:flex-start}
+.msg .who{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:2px}
+.msg.typing{color:var(--muted);font-style:italic}
+.quick{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:none}
+.quick::-webkit-scrollbar{display:none}
+.quick .chip{white-space:nowrap}
+.composer{position:sticky;bottom:0;display:flex;gap:8px;background:var(--ground);padding:8px 0 12px;margin-top:auto}
+.composer input{flex:1;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:11px 14px;font-size:15px}
+.composer button{border:none;border-radius:999px;background:var(--accent);color:#fff;font-weight:700;padding:0 16px}
+@media (prefers-reduced-motion: reduce){.sheet,.scrim{transition:none}.palert i::after{animation:none}}
+</style>
+
+<div class="wrap">
+
+  <div class="phone">
+    <div class="screen">
+      <div class="status"><span class="mono" id="clock">19:30</span><span class="island"></span><span class="mono" id="sbatt">96%</span></div>
+      <div class="toast" id="toast" role="status"><i id="toastDot"></i><span id="toastTxt"></span></div>
+      <main class="view" id="view"></main>
+      <section class="v3d" id="v3d" aria-label="Levia in 3D">
+        <div class="row between"><div><h1 id="t3d">Atlas in 3D</h1><div class="sub" style="margin-top:2px">Drag to rotate · pinch to zoom</div></div></div>
+        <div class="seg" role="group" aria-label="What to show"><button data-v3="bld" aria-pressed="true">Building</button><button data-v3="bot" aria-pressed="false">Robot</button></div>
+        <div class="pane" id="bldPane">
+          <div class="stage3d" id="stageB"><div class="tagname"><i></i><span id="tagB">HQ Building</span></div><div class="plabels" id="blabels"></div><div class="hint" id="hintB">Loading 3D…</div></div>
+          <div class="chips" role="group" aria-label="Floor"><button class="chip" data-bfloor="all" aria-pressed="true">All floors</button><button class="chip" data-bfloor="F1" aria-pressed="false">Floor 1</button><button class="chip" data-bfloor="F2" aria-pressed="false">Floor 2</button><button class="chip" data-bfloor="F3" aria-pressed="false">Floor 3</button></div>
+          <div class="legend"><span><i style="background:#2B3A44"></i>To clean</span><span><i style="background:#2E8A55"></i>Cleaned</span><span><i style="background:#8A2F2A"></i>Booked</span><span><i style="background:var(--accent)"></i>Robot</span><span><i style="background:#F2B24A"></i>Lost item</span></div>
+          <div class="card list"><div class="item" style="padding-top:0"><div><b>Built from the first scan</b><small id="scanInfo">25 Sep 2026 · 3 floors · 9 spaces · 2,400 m² · 41 s</small></div><button class="btn btn-ghost" id="replayScan">Replay</button></div>
+          <div class="item" style="padding-bottom:0"><div><b>Updates every night</b><small>Moved furniture and new rooms are added automatically</small></div><span class="pill p-ok"><i></i>Live</span></div></div>
+          <div class="sample">The model is private to your company and stays on Levia’s EU servers</div>
+        </div>
+        <div class="pane" id="botPane" hidden>
+        <div class="stage3d" id="stage3d"><div class="tagname"><i></i><span id="tag3d">Atlas</span></div><div class="plabels" id="plabels"></div><div class="hint" id="hint3d">Loading 3D…</div></div>
+        <div class="modes" role="group" aria-label="Demo mode">
+          <button class="chip" data-pmode="floor">Vacuum</button><button class="chip" data-pmode="mop">Wash</button><button class="chip" data-pmode="uv">UV-C</button><button class="chip" data-pmode="flight">Flight</button><button class="chip" data-pmode="arm">Arm</button><button class="chip" data-pmode="hub">Hub</button><button class="chip" data-pmode="explode">Parts</button>
+        </div>
+        <div class="card" id="alertsCard"></div>
+        <div class="card"><b id="mT" style="font-size:15px">Floor mode</b><div class="sub" id="mD" style="margin:4px 0 0;line-height:1.5"></div></div>
+        <h2>Part health</h2>
+        <div class="card" id="health"></div>
+        <button class="btn btn-ghost" id="simFault">Simulate a fault (demo)</button>
+        <div class="sample">Tap “Parts”, then a label, to read what each component does</div>
+        </div>
+      </section>
+      <nav class="tabs" aria-label="App sections">
+        <button class="tab" data-tab="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+        <button class="tab" data-tab="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></svg>Map</button>
+        <button class="tab" data-tab="3d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg>3D</button>
+        <button class="tab" data-tab="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>Chat</button>
+        <button class="tab" data-tab="schedule"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Schedule</button>
+        <button class="tab" data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>More</button>
+      </nav>
+      <div class="scrim" id="scrim"></div>
+      <div class="sheet" id="sheet" role="dialog" aria-label="Choose robot"></div>
+      <div class="onb" id="onb" hidden></div>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+// ---------- personalisation (kept in this browser only) ----------
+const ACCENTS = [['#127FB0', 'Levia blue'], ['#1F7A4D', 'Forest'], ['#7A4FA8', 'Plum'], ['#C2492F', 'Coral'], ['#3E4C57', 'Graphite'], ['#A8650F', 'Amber']];
+const NAME_IDEAS = ['Atlas', 'Nova', 'Pip', 'Breeze', 'Orbit'];
+const P = { company: 'Northwind Studio', user: 'Sara', accent: '#127FB0', onboarded: false, active: 'r1',
+  robots: [{ id: 'r1', name: 'Atlas', building: 'HQ Building', floors: 3 }, { id: 'r2', name: 'Nova', building: 'Annex', floors: 2 }],
+  theme: 'system', notify: { lost: true, done: true, supplies: true, maint: true }, sounds: true };
+try { Object.assign(P, JSON.parse(localStorage.getItem('leviaBiz1') || '{}')); } catch (e) {}
+const save = () => { try { localStorage.setItem('leviaBiz1', JSON.stringify(P)); } catch (e) {} };
+const robot = () => P.robots.find(r => r.id === P.active) || P.robots[0];
+
+// ---------- sample building ----------
+const FLOORS = {
+  F1: { name: 'Floor 1', rooms: [
+    { id: 'atr1', name: 'Atrium', x: 0, y: 0, w: 70, h: 200 },
+    { id: 'lobby', name: 'Lobby', x: 70, y: 0, w: 150, h: 200 },
+    { id: 'meetA', name: 'Meeting Room A', x: 220, y: 0, w: 130, h: 200 } ] },
+  F2: { name: 'Floor 2', rooms: [
+    { id: 'atr2', name: 'Stair hall', x: 0, y: 0, w: 70, h: 200 },
+    { id: 'office', name: 'Open office', x: 70, y: 0, w: 180, h: 200 },
+    { id: 'server', name: 'Server room', x: 250, y: 0, w: 100, h: 200 } ] },
+  F3: { name: 'Floor 3', rooms: [
+    { id: 'atr3', name: 'Upper atrium', x: 0, y: 0, w: 70, h: 200 },
+    { id: 'break', name: 'Break room', x: 70, y: 0, w: 150, h: 200 },
+    { id: 'lounge', name: 'Lounge', x: 220, y: 0, w: 130, h: 200 } ] },
+};
+const PLAN = [['F1', 'lobby', 2, 26], ['F2', 'office', 30, 52], ['F2', 'server', 52, 64], ['F3', 'break', 68, 84], ['F3', 'lounge', 84, 98], ['F1', 'meetA', 104, 118]];
+const ROOMNAME = id => { for (const f in FLOORS) { const r = FLOORS[f].rooms.find(r => r.id === id); if (r) return `${r.name} · ${f}`; } return id; };
+const freshSim = () => ({ running: false, paused: false, min: 0, speed: 1, battery: 96, notes: [], keysCollected: false });
+const SIMS = { r1: freshSim(), r2: { ...freshSim(), battery: 100 } };
+const S = {
+  tab: 'home', sub: null, floorView: 'F2', ...SIMS[P.active] || SIMS.r1,
+  scent: 'cedar', scentLevel: 40,
+  rules: { server: { lock: true, quiet: false, nightly: true }, meetA: { lock: false, quiet: false, nightly: true, calendar: true }, lounge: { lock: false, quiet: true, nightly: true }, office: { lock: false, quiet: false, nightly: true } },
+  cmodes: { lobby: { vac: 1, wash: 1, uv: 1 }, meetA: { vac: 1, wash: 0, uv: 0 }, office: { vac: 1, wash: 0, uv: 0 }, server: { vac: 1, wash: 0, uv: 0 }, break: { vac: 1, wash: 1, uv: 1 }, lounge: { vac: 1, wash: 1, uv: 0 } },
+  detergent: 62, tickets: [], team: [['Sara Bianchi', 'Facility manager', 'Admin'], ['Luca Ferri', 'Reception', 'Lost & found'], ['Marta Gallo', 'IT', 'Server room rules']],
+};
+const SIM_KEYS = Object.keys(freshSim());
+function switchRobot(id) {
+  const cur = {}; SIM_KEYS.forEach(k => cur[k] = S[k]); SIMS[P.active] = cur;
+  P.active = id; save(); Object.assign(S, SIMS[id] || freshSim());
+}
+const EVENTS = [
+  [0, 'led', 'Night shift started', 'Quick scan of 3 floors'],
+  [1, 'led', 'Building mapped', '9 spaces saved to memory'],
+  [3, 'alert', 'Meeting Room A is booked', 'Until 20:30 · cleaning moved to 21:14'],
+  [28, 'led', 'Flying to Floor 2', 'Via the atrium'],
+  [41, 'amber', 'Lost item found: keys', 'Floor 2 · under desk 2 · picked up'],
+  [52, 'led', 'Server room opened', 'Rule: close and lock on exit'],
+  [64, 'ok', 'Server room cleaned and locked', 'Door sensor confirms closed'],
+  [84, 'violet', 'Air refreshed · Floor 3', 'Scent: Cedar & Bergamot'],
+  [104, 'ok', 'Meeting Room A is free', 'Rescheduled clean started'],
+  [118, 'ok', 'Night shift complete', 'Waste sorted · water refilled · at the Hub'],
+];
+const COLORS = { led: 'var(--led)', ok: 'var(--ok)', amber: 'var(--amber)', alert: 'var(--alert)', violet: 'var(--violet)' };
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const clockAt = m => { const t = 19 * 60 + 30 + Math.floor(m); return `${String(Math.floor(t / 60) % 24).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}`; };
+function roomProgress(room) { const p = PLAN.find(x => x[1] === room); if (!p) return 0; return Math.max(0, Math.min(1, (S.min - p[2]) / (p[3] - p[2]))); }
+function floorProgress(f) { const rooms = PLAN.filter(p => p[0] === f); return rooms.reduce((a, p) => a + roomProgress(p[1]), 0) / rooms.length; }
+function current() {
+  if (!S.running && S.min === 0) return { floor: 'F1', room: 'dock', label: 'At the Hub · ready', state: 'docked' };
+  if (S.min >= 118) return { floor: 'F1', room: 'dock', label: 'At the Hub · charging', state: 'done' };
+  const p = PLAN.find(x => S.min >= x[2] && S.min < x[3]);
+  if (p) { const m = S.cmodes[p[1]], verb = m.uv && roomProgress(p[1]) > .7 ? 'UV sanitizing' : m.wash && roomProgress(p[1]) > .4 ? 'Washing' : 'Vacuuming';
+    return { floor: p[0], room: p[1], label: `${verb} · ${FLOORS[p[0]].rooms.find(r => r.id === p[1]).name}`, state: 'cleaning' }; }
+  return { floor: S.min < 30 ? 'F1' : S.min < 68 ? 'F2' : 'F3', room: 'atrium', label: S.min < 2 ? 'Scanning · all floors' : 'Flying · atrium', state: 'flying' };
+}
+
+// ---------- toast ----------
+let toastTimer;
+function toast(kind, text) {
+  $('toastDot').style.background = COLORS[kind]; $('toastTxt').textContent = text;
+  $('toast').classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').classList.remove('show'), 2600);
+}
+function pushEvents(prev, now) {
+  for (const e of EVENTS) if (e[0] > prev && e[0] <= now || (prev === -1 && e[0] === 0)) {
+    S.notes.unshift({ t: clockAt(e[0]), kind: e[1], title: e[2].replace('Night shift', `${robot().name}’s shift`), sub: e[3] });
+    if (e[1] !== 'amber' || P.notify.lost) toast(e[1], e[2]);
+  }
+}
+
+// ---------- views ----------
+const robotIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="13" rx="9" ry="4"/><path d="M5 11V9M19 11V9M3 8h4M17 8h4"/><circle cx="12" cy="13" r="1.2"/></svg>`;
+function floorBars() {
+  return ['F3', 'F2', 'F1'].map(f => { const v = Math.round(floorProgress(f) * 100);
+    return `<div class="frow"><span>${f}</span><div class="bar"><i style="width:${v}%"></i></div><span class="mono" style="text-align:right;color:var(--muted)">${v}%</span></div>`; }).join('');
+}
+const noteHTML = n => `<div class="note"><i style="background:${COLORS[n.kind]}"></i><div><b>${esc(n.title)}</b><small>${esc(n.sub)}</small></div><time>${n.t}</time></div>`;
+function home() {
+  const c = current(), r = robot(), total = Math.round(['F1', 'F2', 'F3'].reduce((a, f) => a + floorProgress(f), 0) / 3 * 100);
+  const pill = c.state === 'cleaning' || c.state === 'done' ? 'p-ok' : c.state === 'flying' ? 'p-led' : 'p-amber';
+  return `
+  <div class="row between"><div><h1>Good evening, ${esc(P.user)}</h1><div class="sub" style="margin-top:2px">${esc(P.company)}</div></div></div>
+  <button class="robotbtn" id="pickRobot" aria-label="Switch robot"><span class="dot">${robotIcon}</span><span style="flex:1"><b>${esc(r.name)}</b><small>${esc(r.building)} · ${r.floors} floors · ${P.robots.length} robots</small></span><span class="muted" aria-hidden="true">▾</span></button>
+  <div class="card hero">
+    <div class="row between"><span class="pill ${pill}"><i></i>${esc(c.label)}</span><span class="mono muted">${S.battery}%</span></div>
+    <div style="height:10px"></div>
+    <div class="big">${S.min >= 118 ? 'Building clean' : S.running ? `${total}% of tonight’s plan` : `${esc(r.name)} is ready for tonight`}</div>
+    <div class="muted">${S.min >= 118 ? 'Report ready for the morning' : S.running ? 'Cleaning on another level' : 'Next shift 19:30 · after the last booking'}</div>
+    <div style="height:12px"></div>
+    <div class="row">${S.running && S.min < 118
+      ? `<button class="btn btn-ghost" id="pause" style="flex:1">${S.paused ? 'Resume' : 'Pause'}</button><button class="btn btn-ghost" id="faster" style="flex:1">${S.speed > 1 ? 'Normal speed' : 'Fast-forward'}</button>`
+      : S.min >= 118 ? `<button class="btn btn-ghost" id="report" style="flex:1">Open night report</button>` : `<button class="btn btn-primary" id="start" style="flex:1">Start ${esc(r.name)} now</button>`}</div>
+  </div>
+  ${S.alerts.length ? `<button class="card" data-alert-go="1" style="text-align:left"><div class="row between"><b style="font-size:15px">${S.alerts.some(a => a.level === 'red') ? 'Needs attention' : 'Heads-up'}</b><span class="pill ${S.alerts.some(a => a.level === 'red') ? 'p-alert' : 'p-amber'}"><i></i>${S.alerts.length} alert${S.alerts.length > 1 ? 's' : ''}</span></div>${S.alerts.slice(0, 2).map(a => alertHTML(a, false)).join('')}<div class="sub" style="margin:4px 0 0;color:var(--led);font-weight:700">See it on the 3D robot ›</div></button>` : ''}
+  <div class="card"><div class="floors">${floorBars()}</div></div>
+  <div class="grid2">
+    <button class="card stat" data-go="3d" style="text-align:left"><b>3D</b><span>See ${esc(r.name)} up close</span></button>
+    <button class="card stat" data-sub-go="supplies" style="text-align:left"><b>${S.detergent}%</b><span>Your detergent</span></button>
+    <button class="card stat" data-sub-go="lost" style="text-align:left"><b>${S.min >= 41 && !S.keysCollected ? '1' : '0'}</b><span>Lost items waiting</span></button>
+    <button class="card stat" data-sub-go="maint" style="text-align:left"><b>14 Oct</b><span>Next technician visit</span></button>
+  </div>
+  <h2>Activity</h2>
+  <div class="feed">${S.notes.length ? S.notes.slice(0, 5).map(noteHTML).join('') : '<div class="card sub" style="margin:0">Nothing yet tonight. Start the shift to see live updates.</div>'}</div>
+  <div class="sample">Sample data</div>`;
+}
+function planSVG(f) {
+  const c = current(), fl = FLOORS[f];
+  let s = `<svg class="plan" viewBox="-6 -6 362 236" role="img" aria-label="${fl.name} floor plan">`;
+  for (const r of fl.rooms) {
+    const pr = roomProgress(r.id), booked = r.id === 'meetA' && S.min < 60, m = S.cmodes[r.id];
+    s += `<rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="6" fill="var(--surface-2)" stroke="var(--line)" stroke-width="2"/>`;
+    if (pr > 0) s += `<rect x="${r.x + 3}" y="${r.y + 3}" width="${(r.w - 6) * pr}" height="${r.h - 6}" rx="4" fill="var(--ok-soft)"/>`;
+    if (booked) s += `<rect x="${r.x + 3}" y="${r.y + 3}" width="${r.w - 6}" height="${r.h - 6}" rx="4" fill="var(--alert-soft)"/>`;
+    s += `<text x="${r.x + 10}" y="${r.y + 22}" font-size="13" font-weight="700" fill="var(--ink)" font-family="Figtree, Arial">${r.name}</text>`;
+    if (booked) s += `<text x="${r.x + 10}" y="${r.y + 40}" font-size="11" fill="var(--alert)" font-family="Figtree, Arial">Booked until 20:30</text>`;
+    if (S.rules[r.id]?.lock) s += `<text x="${r.x + 10}" y="${r.y + 40}" font-size="11" fill="var(--amber)" font-family="Figtree, Arial">Locks after cleaning</text>`;
+    if (m) s += `<text x="${r.x + 10}" y="${r.y + r.h - 12}" font-size="10" fill="var(--muted)" font-family="Figtree, Arial">${['Vac', m.wash && 'Wash', m.uv && 'UV'].filter(Boolean).join(' · ')}</text>`;
+  }
+  if (f === 'F1') s += `<rect x="120" y="150" width="34" height="26" rx="5" fill="var(--led-soft)" stroke="var(--led)"/><text x="137" y="167" text-anchor="middle" font-size="10" fill="var(--led)" font-family="Figtree, Arial" font-weight="700">Hub</text>`;
+  s += `<g stroke="var(--muted)" stroke-width="1.2" opacity=".6">${[18, 30, 42, 54].map(y => `<line x1="12" y1="${60 + y * 2}" x2="58" y2="${60 + y * 2}"/>`).join('')}</g>`;
+  if (f === 'F2' && S.min >= 41 && !S.keysCollected) s += `<g><circle cx="150" cy="120" r="9" fill="var(--amber)"/><text x="164" y="124" font-size="11" fill="var(--amber)" font-weight="700" font-family="Figtree, Arial">Keys</text></g>`;
+  if (c.floor === f) {
+    let x = 137, y = 130;
+    if (c.state === 'cleaning') { const r = fl.rooms.find(r => r.id === c.room); const pr = roomProgress(c.room); x = r.x + 14 + (r.w - 28) * pr; y = r.y + 100 + Math.sin(S.min * 2.1) * 50; }
+    else if (c.state === 'flying') { x = 35; y = 110; }
+    s += `<circle cx="${x}" cy="${y}" r="16" fill="var(--led)" opacity=".18"/><circle cx="${x}" cy="${y}" r="8" fill="var(--led)" stroke="#fff" stroke-width="2.5"/>`;
+  }
+  return s + '</svg>';
+}
+function mapView() {
+  return `<h1>Live map</h1><div class="sub">${esc(robot().name)} · ${esc(current().label)}</div>
+  <div class="chips" role="group" aria-label="Choose floor">${['F1', 'F2', 'F3'].map(f => `<button class="chip" data-floor="${f}" aria-pressed="${S.floorView === f}">${FLOORS[f].name}</button>`).join('')}</div>
+  <div class="card">${planSVG(S.floorView)}</div>
+  <div class="legend"><span><i style="background:var(--ok-soft);border:1px solid var(--ok)"></i>Cleaned</span><span><i style="background:var(--alert-soft);border:1px solid var(--alert)"></i>Booked</span><span><i style="background:var(--led)"></i>${esc(robot().name)}</span><span><i style="background:var(--amber)"></i>Lost item</span></div>
+  <div class="card"><div class="row between"><div><b style="font-size:14px">Send ${esc(robot().name)} to ${FLOORS[S.floorView].name}</b><div class="sub" style="margin:2px 0 0">It flies via the atrium and continues there</div></div><button class="btn btn-ghost" id="sendTo">Send</button></div></div>
+  <div class="sample">Sample building</div>`;
+}
+function scheduleView() {
+  const ROW = 44, START = 19 * 60, ROWS = 7;
+  const toY = hm => { const [h, m] = hm.split(':').map(Number); return (h * 60 + m - START) / 30 * ROW; };
+  const evs = [
+    { from: '19:00', to: '20:30', lane: 0, t: 'Board meeting', s: 'Meeting Room A', c: 'alert' },
+    { from: '19:30', to: '21:30', lane: 1, t: `${robot().name} night shift`, s: '3 floors · skips booked rooms', c: 'led' },
+    { from: '21:14', to: '21:30', lane: 0, t: 'Meeting Room A', s: 'Rescheduled clean', c: 'ok' },
+  ];
+  let labels = '', lines = '';
+  for (let r = 0; r <= ROWS; r++) { const m = START + r * 30; labels += `<div style="position:absolute;top:${r * ROW - 8}px;left:0;width:44px;font-family:var(--mono);font-size:12px;color:var(--muted)">${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}</div>`;
+    lines += `<div style="position:absolute;top:${r * ROW}px;left:50px;right:0;border-top:1px solid var(--line)"></div>`; }
+  const nowY = S.running || S.min > 0 ? toY(clockAt(S.min)) : null;
+  const evHTML = evs.map(e => { const top = toY(e.from) + 2, h = Math.max(40, toY(e.to) - toY(e.from) - 4);
+    return `<div class="ev" style="top:${top}px;height:${h}px;left:calc(50px + ${e.lane * 50}% - ${e.lane * 25}px);width:calc(50% - 29px);background:var(--${e.c}-soft);color:var(--${e.c})"><span style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(e.t)}</span><small style="white-space:normal">${e.s}</small></div>`; }).join('');
+  const now = nowY !== null && nowY >= 0 && nowY <= ROWS * ROW ? `<div style="position:absolute;top:${nowY}px;left:46px;right:0;border-top:2px solid var(--alert)"></div><div style="position:absolute;top:${nowY - 4}px;left:42px;width:8px;height:8px;border-radius:50%;background:var(--alert)"></div>` : '';
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  return `<h1>Schedule</h1><div class="sub">Tonight · synced with your room calendar</div>
+  <div class="card"><div style="position:relative;height:${ROWS * ROW + 22}px;overflow:hidden"><div style="position:absolute;left:0;right:0;top:12px;bottom:0">${labels}${lines}${evHTML}${now}</div></div></div>
+  <h2>Cleaning days</h2>
+  <div class="chips" role="group" aria-label="Cleaning days">${days.map((d, i) => `<button class="chip" data-day="${i}" aria-pressed="${i < 5}">${d}</button>`).join('')}</div>
+  <div class="card"><div class="item" style="padding-top:0"><div><b>Avoid booked rooms</b><small>Clean them after the booking ends</small></div><button class="switch" role="switch" aria-checked="true" aria-label="Avoid booked rooms" data-static></button></div>
+  <div class="item" style="padding-bottom:0"><div><b>Start after last person leaves</b><small>Uses access badges and motion sensors</small></div><button class="switch" role="switch" aria-checked="true" aria-label="Start after last person leaves" data-static></button></div></div>
+  <div class="sample">Sample calendar</div>`;
+}
+function moreView() {
+  const r = robot();
+  const items = [
+    ['personal', 'Personalize', `${r.name} · ${ACCENTS.find(a => a[0] === P.accent)?.[1] || 'Custom'} colour`],
+    ['robots', 'My robots', `${P.robots.length} robots · rename or add`],
+    ['rules', 'Rooms & rules', 'Lock, quiet mode, follow bookings'],
+    ['cmodes', 'Cleaning modes', 'Vacuum, wash or UV per room'],
+    ['lost', 'Lost & found', S.min >= 41 && !S.keysCollected ? '1 item at reception' : 'No items waiting'],
+    ['air', 'Air & scent', `${S.scentLabel || 'Cedar & Bergamot'} · ${S.scentLevel}%`],
+    ['supplies', 'Supplies', `Detergent ${S.detergent}% · supplied by you`],
+    ['maint', 'Maintenance', 'Next visit 14 Oct · report a problem'],
+    ['report', 'Night report', S.min >= 118 ? 'Ready' : 'Available after the shift'],
+    ['robot', 'Robot & Hub', `Battery ${S.battery}% · water ${S.min >= 118 ? '100' : Math.max(20, Math.round(100 - S.min * .6))}%`],
+    ['team', 'Team & access', `${S.team.length} people`],
+    ['billing', 'Plan & billing', 'Continuous plan · 36 months'],
+    ['settings', 'Settings', 'Notifications, theme, sounds'],
+  ];
+  return `<h1>More</h1><div class="menu">${items.map(([id, t, s]) => `<button data-sub="${id}"><span><b>${t}</b><small>${esc(s)}</small></span>›</button>`).join('')}</div><div class="sample">Sample data</div>`;
+}
+const back = `<button class="back" data-sub="">‹ More</button>`;
+function personalView() {
+  const r = robot();
+  return `${back}<h1>Personalize</h1><div class="sub">Make Levia feel like part of the team</div>
+  <div class="card" style="display:flex;flex-direction:column;gap:12px">
+    <label class="field">Robot name<input id="inName" maxlength="18" value="${esc(r.name)}"></label>
+    <div class="chips">${NAME_IDEAS.map(n => `<button class="chip" data-idea="${n}">${n}</button>`).join('')}</div>
+    <label class="field">Building<input id="inBuilding" maxlength="28" value="${esc(r.building)}"></label>
+    <label class="field">Company<input id="inCompany" maxlength="32" value="${esc(P.company)}"></label>
+    <label class="field">Your name<input id="inUser" maxlength="20" value="${esc(P.user)}"></label>
+    <button class="btn btn-primary" id="savePersonal">Save</button>
+  </div>
+  <h2>App colour</h2>
+  <div class="card"><div class="swatches" role="group" aria-label="App colour">${ACCENTS.map(([h, n]) => `<button data-accent="${h}" aria-pressed="${P.accent === h}" aria-label="${n}" title="${n}" style="background:${h}"></button>`).join('')}</div>
+  <div class="sub" style="margin:10px 0 0">The robot’s status light changes too.</div></div>
+  <button class="btn btn-ghost" id="redoOnb">Run the welcome setup again</button>
+  <div class="sample">Saved in this browser only</div>`;
+}
+function robotsView() {
+  return `${back}<h1>My robots</h1><div class="sub">Each robot has its own name, building and plan</div>
+  ${P.robots.map(r => `<div class="card row"><span class="avatar">${robotIcon}</span><div style="flex:1"><b style="font-size:15px">${esc(r.name)}</b><div class="sub" style="margin:2px 0 0">${esc(r.building)} · ${r.floors} floors</div></div>
+    ${r.id === P.active ? '<span class="pill p-led"><i></i>Active</span>' : `<button class="btn btn-ghost" data-robot="${r.id}">Open</button>`}</div>`).join('')}
+  <button class="btn btn-primary" id="addRobot">Request another Levia</button>
+  <div class="sample">A new robot starts with a 3D scan of its building</div>`;
+}
+const RULE_LABELS = { nightly: ['Clean every night', ''], lock: ['Close and lock after cleaning', 'Via the building access system'], quiet: ['Quiet mode', 'Wheels only, no flight'], calendar: ['Follow room bookings', 'Skip while booked'] };
+function rulesView() {
+  return `${back}<h1>Rooms & rules</h1><div class="sub">${esc(robot().name)} learns them and follows them every night</div>` +
+    Object.entries(S.rules).map(([id, r]) => `<div class="card"><div class="row between"><b style="font-size:15px">${ROOMNAME(id)}</b>${r.lock ? '<span class="pill p-amber"><i></i>Locks</span>' : ''}</div><div class="list">${Object.keys(r).map(k =>
+      `<div class="item"><div><b>${RULE_LABELS[k][0]}</b>${RULE_LABELS[k][1] ? `<small>${RULE_LABELS[k][1]}</small>` : ''}</div><button class="switch" role="switch" aria-checked="${r[k]}" aria-label="${RULE_LABELS[k][0]} in ${ROOMNAME(id)}" data-rule="${id}.${k}"></button></div>`).join('')}</div></div>`).join('') +
+    `<div class="sample">Locking always needs admin approval in the live product</div>`;
+}
+function cmodesView() {
+  return `${back}<h1>Cleaning modes</h1><div class="sub">Choose what happens in each room</div>
+  <div class="card"><div class="mtable"><span></span><span class="h">Vacuum</span><span class="h">Wash</span><span class="h">UV-C</span>
+  ${Object.entries(S.cmodes).map(([id, m]) => `<b style="font-size:13px">${ROOMNAME(id)}</b>${['vac', 'wash', 'uv'].map(k => `<button class="mt" data-cm="${id}.${k}" aria-pressed="${!!m[k]}" aria-label="${k} in ${ROOMNAME(id)}">${m[k] ? 'On' : 'Off'}</button>`).join('')}`).join('')}
+  </div></div>
+  <div class="card list"><div class="item" style="padding-top:0"><div><b>Wash</b><small>Hard floors only · uses your detergent</small></div></div><div class="item" style="padding-bottom:0"><div><b>UV-C</b><small>Runs after washing · stops if a person is detected</small></div></div></div>
+  <div class="sample">Carpets are always vacuumed only</div>`;
+}
+function lostView() {
+  const has = S.min >= 41;
+  return `${back}<h1>Lost & found</h1><div class="sub">Items ${esc(robot().name)} picked up while cleaning</div>
+  ${has ? `<div class="card row"><div class="keyimg"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="12" r="4"/><path d="M12 12h9M18 12v3M21 12v2"/></svg></div>
+    <div style="flex:1"><b style="font-size:15px">Keys with red tag</b><div class="sub" style="margin:2px 0 0">Floor 2 · under desk 2 · ${clockAt(41)}</div>
+    <div style="height:6px"></div>${S.keysCollected ? '<span class="pill p-ok"><i></i>Collected</span>' : '<span class="pill p-amber"><i></i>At reception</span>'}</div></div>
+    ${S.keysCollected ? '' : '<button class="btn btn-primary" id="collect">Mark as collected</button>'}` : '<div class="card sub" style="margin:0">Nothing found yet tonight. Start the shift on Home.</div>'}
+  <div class="sample">Sample item</div>`;
+}
+const SCENTS = [['cedar', 'Cedar & Bergamot', 'Warm, woody'], ['citrus', 'Fresh Citrus', 'Bright, clean'], ['linen', 'White Linen', 'Soft, neutral'], ['none', 'No scent', 'Filter only']];
+function airView() {
+  return `${back}<h1>Air & scent</h1><div class="sub">HEPA filtering runs on every flight</div>
+  <div class="grid2"><div class="card stat"><b style="color:var(--ok)">Good</b><span>Air quality · F3</span></div><div class="card stat"><b>${S.scentLevel}%</b><span>Scent intensity</span></div></div>
+  <h2>Signature scent</h2><div class="scent">${SCENTS.map(([id, n, d]) => `<button data-scent="${id}" aria-pressed="${S.scent === id}"><b>${n}</b><small>${d}</small></button>`).join('')}</div>
+  <div class="card"><label for="lvl" style="font-weight:700;font-size:14px">Intensity</label><input class="range" id="lvl" type="range" min="0" max="100" step="10" value="${S.scentLevel}"></div>
+  <div class="sample">Sample settings</div>`;
+}
+function suppliesView() {
+  const nights = Math.floor(S.detergent / 4.5);
+  return `${back}<h1>Supplies</h1><div class="sub">On the continuous plan you supply detergent and water</div>
+  <div class="card"><div class="row between"><b style="font-size:15px">Floor detergent</b><span class="pill ${S.detergent < 25 ? 'p-alert' : S.detergent < 45 ? 'p-amber' : 'p-ok'}"><i></i>${S.detergent}%</span></div>
+    <div style="height:10px"></div><div class="bar"><i style="width:${S.detergent}%;background:var(--ok)"></i></div>
+    <div class="sub" style="margin:10px 0 0">5 L canister in the Hub · about ${nights} nights left</div>
+    <div style="height:12px"></div><div class="row"><button class="btn btn-ghost" id="refilled" style="flex:1">I refilled it</button><button class="btn btn-primary" id="orderDet" style="flex:1">Order from partner</button></div></div>
+  <div class="card list">
+    <div class="item" style="padding-top:0"><div><b>Water</b><small>Hub refills from its tank · top up weekly or connect a tap</small></div><span class="pill p-ok"><i></i>OK</span></div>
+    <div class="item"><div><b>Scent cartridge</b><small>${S.scentLabel || 'Cedar & Bergamot'}</small></div><span class="mono">71%</span></div>
+    <div class="item" style="padding-bottom:0"><div><b>Filters, pads, brushes</b><small>Included in your plan · changed by our technician</small></div><span class="pill p-led"><i></i>Levia</span></div>
+  </div>
+  <div class="card"><div class="item" style="padding:0"><div><b>Remind me at 25%</b><small>Push and email to the facility team</small></div><button class="switch" role="switch" aria-checked="${P.notify.supplies}" aria-label="Supply reminders" data-notify="supplies"></button></div></div>
+  <div class="sample">Use Levia-approved, low-foam detergent only</div>`;
+}
+function maintView() {
+  const parts = [['Side brushes', 64], ['Mop pad', 48], ['HEPA filter', 81], ['UV-C lamp', 93], ['Battery health', 97]];
+  return `${back}<h1>Maintenance</h1><div class="sub">Four technician visits a year are included</div>
+  <div class="card row"><div class="avatar" style="width:46px;height:46px">🔧</div><div style="flex:1"><b style="font-size:15px">Next visit · Tue 14 Oct</b><div class="sub" style="margin:2px 0 0">08:00–09:00 · brushes and mop pad swap</div></div></div>
+  <div class="card">${parts.map(([n, v]) => `<div class="hp"><span>${n}</span><div class="bar"><i style="width:${v}%;background:${v < 55 ? 'var(--amber)' : 'var(--ok)'}"></i></div><span class="mono" style="text-align:right">${v}%</span></div>`).join('')}</div>
+  <h2>Report a problem</h2>
+  <div class="card" style="display:flex;flex-direction:column;gap:12px">
+    <label class="field">What’s wrong?<select id="tCat"><option>Missed area</option><option>Robot stuck or error</option><option>Hub or charging</option><option>App or schedule</option><option>Something else</option></select></label>
+    <label class="field">Details<textarea id="tTxt" placeholder="e.g. the kitchen corner was not washed on Tuesday"></textarea></label>
+    <button class="btn btn-primary" id="sendTicket">Send to Levia support</button>
+  </div>
+  ${S.tickets.length ? `<h2>Your requests</h2><div class="card list">${S.tickets.map(t => `<div class="item"><div><b>${t.id} · ${esc(t.cat)}</b><small>${esc(t.txt || 'No details')}</small></div><span class="pill p-amber"><i></i>Open</span></div>`).join('')}</div>` : ''}
+  <div class="sample">Sample data · nothing is sent in this prototype</div>`;
+}
+function reportView() {
+  const done = S.min >= 118;
+  return `${back}<h1>Night report</h1><div class="sub">${done ? 'Tonight · ready at 08:30' : 'Finish the shift to see the report'}</div>
+  <div class="card"><div class="floors">${floorBars()}</div></div>
+  <div class="card list">
+    <div class="item"><div><b>Rooms cleaned</b><small>Including Meeting Room A after its booking</small></div><span class="mono">${PLAN.filter(p => roomProgress(p[1]) >= 1).length} / ${PLAN.length}</span></div>
+    <div class="item"><div><b>Doors locked by rule</b><small>Server room</small></div><span class="mono">${S.min >= 64 ? 1 : 0}</span></div>
+    <div class="item"><div><b>Lost items</b><small>Keys · at reception</small></div><span class="mono">${S.min >= 41 ? 1 : 0}</span></div>
+    <div class="item"><div><b>Floors washed</b><small>Rooms set to “Wash”</small></div><span class="mono">${S.min >= 98 ? Object.values(S.cmodes).filter(m => m.wash).length + ' rooms' : '–'}</span></div>
+    <div class="item"><div><b>UV sanitizing</b><small>Rooms set to “UV-C”</small></div><span class="mono">${S.min >= 98 ? Object.values(S.cmodes).filter(m => m.uv).length + ' rooms' : '–'}</span></div>
+    <div class="item"><div><b>Waste sorted</b><small>Dust · paper · plastic</small></div><span class="mono">${done ? '3 bins' : '–'}</span></div>
+  </div><div class="sample">Sample report</div>`;
+}
+function robotView() {
+  return `${back}<h1>Robot & Hub</h1><div class="sub">${esc(robot().name)} · ${esc(robot().building)}</div>
+  <div class="grid2"><div class="card stat"><b>${S.battery}%</b><span>Battery</span></div><div class="card stat"><b>${current().floor}</b><span>Location</span></div></div>
+  <div class="card list">${[['Ducted fans', 'ok', 'Guards intact'], ['LiDAR + camera', 'ok', 'Calibrated'], ['Side brushes', S.min > 90 ? 'amber' : 'ok', S.min > 90 ? 'Swap soon' : 'Good'], ['Robotic arm', 'ok', 'Ready'], ['UV-C lamp', 'ok', '93% life left'], ['Water tank', S.min > 100 && S.min < 118 ? 'amber' : 'ok', S.min >= 118 ? 'Refilled at the Hub' : `${Math.max(20, Math.round(100 - S.min * .6))}%`], ['Hub bins', 'ok', S.min >= 118 ? 'Emptied and sorted' : 'Space available']].map(([n, k, d]) =>
+    `<div class="item"><div><b>${n}</b><small>${d}</small></div><span class="pill p-${k}"><i></i>${k === 'ok' ? 'OK' : 'Check'}</span></div>`).join('')}</div>
+  <button class="btn btn-ghost" data-go="3d">Open ${esc(robot().name)} in 3D</button>
+  <div class="sample">Sample status</div>`;
+}
+function teamView() {
+  return `${back}<h1>Team & access</h1><div class="sub">Who can see and control ${esc(robot().name)}</div>
+  <div class="card list">${S.team.map(([n, r, a]) => `<div class="item"><div class="row"><span class="avatar" style="font-weight:700">${n.split(' ').map(x => x[0]).join('')}</span><div><b>${esc(n)}</b><small>${esc(r)}</small></div></div><span class="pill ${a === 'Admin' ? 'p-led' : 'p-violet'}"><i></i>${esc(a)}</span></div>`).join('')}</div>
+  <h2>Invite someone</h2>
+  <div class="card" style="display:flex;flex-direction:column;gap:12px">
+    <label class="field">Name<input id="invName" placeholder="Full name"></label>
+    <label class="field">Access<select id="invRole"><option>Viewer</option><option>Lost & found</option><option>Rooms & rules</option><option>Admin</option></select></label>
+    <button class="btn btn-primary" id="invite">Add to team</button>
+  </div><div class="sample">Sample team</div>`;
+}
+function billingView() {
+  return `${back}<h1>Plan & billing</h1><div class="sub">${esc(P.company)}</div>
+  <div class="card planc"><small>Continuous plan · 36 months</small><div class="price">€457<span style="font-size:15px;font-weight:600"> / month</span></div><small>Month 9 of 36 · renews Jul 2028</small></div>
+  <div class="card list">
+    <div class="item" style="padding-top:0"><div><b>Included</b><small>Robot + Hub, 4 technician visits/yr, parts, software updates, support, insurance</small></div></div>
+    <div class="item"><div><b>You supply</b><small>Detergent and water, which keeps the price lower</small></div></div>
+    <div class="item" style="padding-bottom:0"><div><b>Coverage</b><small>${esc(robot().building)} · 3 floors · up to 1,500 m² a night</small></div></div>
+  </div>
+  <h2>Invoices</h2>
+  <div class="card list">${['Sep 2026', 'Aug 2026', 'Jul 2026'].map(m => `<div class="item"><div><b>${m}</b><small>Paid · bank transfer</small></div><span class="mono">€457.00</span></div>`).join('')}</div>
+  <div class="sample">Sample prices, excluding VAT</div>`;
+}
+function settingsView() {
+  const N = [['done', 'Shift finished'], ['lost', 'Lost items found'], ['supplies', 'Supplies running low'], ['maint', 'Maintenance visits']];
+  return `${back}<h1>Settings</h1><div class="sub">For you on this device</div>
+  <h2>Notifications</h2><div class="card list">${N.map(([k, n]) => `<div class="item"><div><b>${n}</b></div><button class="switch" role="switch" aria-checked="${P.notify[k]}" aria-label="${n}" data-notify="${k}"></button></div>`).join('')}</div>
+  <h2>Appearance</h2><div class="chips" role="group" aria-label="Theme">${[['system', 'System'], ['light', 'Light'], ['dark', 'Dark']].map(([k, n]) => `<button class="chip" data-theme-set="${k}" aria-pressed="${P.theme === k}">${n}</button>`).join('')}</div>
+  <div class="card"><div class="item" style="padding:0"><div><b>Robot sounds</b><small>A soft chime when ${esc(robot().name)} starts</small></div><button class="switch" role="switch" aria-checked="${P.sounds}" aria-label="Robot sounds" data-sounds></button></div></div>
+  <div class="sample">Saved in this browser only</div>`;
+}
+
+// ---------- 3D tab ----------
+const HEALTH = [['Ducted fans', 100, 'Guarded ducted fans'], ['LiDAR + camera', 100, 'LiDAR + 360° sensors'], ['Side brushes', 64, 'Side brushes + suction'], ['Mop pad', 48, 'Mop pad'], ['UV-C lamp', 93], ['Robotic arm', 100, 'Robotic arm'], ['Battery', 97, 'Battery pack']];
+// health alerts shown on the 3D robot, on Home and in the chat
+const FAULTS = [
+  { id: 'brush', part: 'Side brushes + suction', level: 'red', short: 'Brush blocked', title: 'Side brush blocked', text: 'A cable is caught in the left brush. Levia stopped vacuuming and is waiting in the Open office.' },
+  { id: 'cam', part: 'AI camera', level: 'amber', short: 'Camera dirty', title: 'Camera lens dirty', text: 'Lost-item detection is less accurate. Wipe the lens with a dry cloth.' },
+  { id: 'tank', part: 'Water tank', level: 'amber', short: 'Tank leak?', title: 'Water tank losing pressure', text: 'Washing still works but uses more water. A technician will check it.' },
+];
+S.alerts = [{ id: 'mop', part: 'Mop pad', level: 'amber', short: 'Mop pad 48%', title: 'Mop pad wearing out', text: '48% life left. It will be swapped at the 14 Oct visit, nothing to do.', t: 'Today' }];
+S.faultIdx = 0;
+function addAlert(a) {
+  if (S.alerts.some(x => x.id === a.id)) return;
+  S.alerts.unshift({ ...a, t: clockAt(S.min) });
+  S.notes.unshift({ t: clockAt(S.min), kind: a.level === 'red' ? 'alert' : 'amber', title: a.title, sub: a.text });
+  toast(a.level === 'red' ? 'alert' : 'amber', a.title);
+  if (viewer) viewer.setAlerts(S.alerts);
+}
+const alertHTML = (a, acts) => `<div class="alert"><i style="background:${a.level === 'red' ? 'var(--alert)' : 'var(--amber)'}"></i><div><b>${esc(a.title)}</b><small>${esc(a.text)}</small>${acts ? `<div class="acts"><button data-alert-see="${a.id}">Show on robot</button><button data-alert-ask="${a.id}">Ask support</button>${a.id === 'mop' ? '' : `<button data-alert-fix="${a.id}">Resolved</button>`}</div>` : ''}</div></div>`;
+let viewer = null, viewerLoading = false, bld = null, bldLoading = false, v3mode = 'bld';
+function botPos() {
+  const c = current(); let x = 137, y = 163;
+  if (c.state === 'cleaning') { const r = FLOORS[c.floor].rooms.find(r => r.id === c.room), pr = roomProgress(c.room); x = r.x + 14 + (r.w - 28) * pr; y = r.y + 100 + Math.sin(S.min * 2.1) * 50; }
+  else if (c.state === 'flying') { x = 35; y = 110; }
+  return { floor: c.floor, x, y, state: c.state, name: robot().name };
+}
+function bldState() {
+  const progress = {}; PLAN.forEach(p => progress[p[1]] = roomProgress(p[1]));
+  return { progress, booked: { meetA: S.running && S.min < 60 }, robot: botPos(), lost: S.min >= 41 && !S.keysCollected && S.min < 118 ? { floor: 'F2', x: 150, y: 120 } : null };
+}
+function set3dMode(m) {
+  v3mode = m; document.querySelectorAll('[data-v3]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v3 === m)));
+  $('bldPane').hidden = m !== 'bld'; $('botPane').hidden = m !== 'bot';
+  if (bld) bld.setActive(m === 'bld'); if (viewer) viewer.setActive(m === 'bot');
+  if (m === 'bld' && !bld && !bldLoading) { bldLoading = true;
+    import('./levia-building.js').then(({ mountBuilding }) => { bld = mountBuilding($('stageB'), { floors: FLOORS, labelsEl: $('blabels'), getState: bldState }); bld.setAccent(P.accent); $('hintB').textContent = 'Drag to rotate'; })
+      .catch(() => { $('hintB').textContent = '3D could not load here'; }); }
+  if (m === 'bot' && !viewer && !viewerLoading) { viewerLoading = true;
+    import('./levia-viewer.js').then(({ mountLevia }) => {
+      viewer = mountLevia($('stage3d'), { labelsEl: $('plabels'),
+        onMode: (mm, info) => { $('mT').textContent = info.t; $('mD').textContent = info.d; },
+        onPart: (name, desc) => { $('mT').textContent = name; $('mD').textContent = desc || ''; },
+        onAlert: a => { $('mT').textContent = a.title; $('mD').textContent = a.text; } });
+      viewer.setAccent(P.accent); viewer.setAlerts(S.alerts); $('hint3d').textContent = 'Drag to rotate';
+    }).catch(() => { $('hint3d').textContent = '3D could not load here'; }); }
+}
+function draw3dPanels() {
+  const bad = new Set(S.alerts.map(a => a.part));
+  $('alertsCard').innerHTML = S.alerts.length ? `<div class="row between"><b style="font-size:15px">Alerts</b><span class="pill ${S.alerts.some(a => a.level === 'red') ? 'p-alert' : 'p-amber'}"><i></i>${S.alerts.length}</span></div>${S.alerts.map(a => alertHTML(a, true)).join('')}` : '<div class="row between"><b style="font-size:15px">All parts working well</b><span class="pill p-ok"><i></i>OK</span></div>';
+  $('health').innerHTML = HEALTH.map(([p, v, part]) => { const al = S.alerts.find(a => a.part === part && a.id !== 'mop'); const col = al ? (al.level === 'red' ? 'var(--alert)' : 'var(--amber)') : v < 55 ? 'var(--amber)' : 'var(--ok)';
+    return `<div class="hp"><span>${p}${al ? ` <b style="color:${col}">· ${al.level === 'red' ? 'fault' : 'check'}</b>` : ''}</span><div class="bar"><i style="width:${v}%;background:${col}"></i></div><span class="mono" style="text-align:right">${v}%</span></div>`; }).join('');
+}
+function show3d(on) {
+  $('view').classList.toggle('off', on); $('v3d').classList.toggle('on', on);
+  if (!on) { if (viewer) viewer.setActive(false); if (bld) bld.setActive(false); return; }
+  const n = robot().name; $('t3d').textContent = v3mode === 'bld' ? robot().building : `${n} in 3D`; $('tag3d').textContent = n; $('tagB').textContent = `${robot().building} · ${n}`;
+  draw3dPanels(); set3dMode(v3mode);
+}
+$('v3d').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
+  if (d.pmode && viewer) viewer.setMode(d.pmode);
+  else if (d.v3) { set3dMode(d.v3); show3d(true); }
+  else if (d.bfloor) { document.querySelectorAll('[data-bfloor]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); bld && bld.setFloor(d.bfloor); }
+  else if (b.id === 'replayScan') { bld && bld.replayScan(); toast('led', 'Replaying the first scan'); }
+  else if (b.id === 'simFault') { addAlert(FAULTS[S.faultIdx++ % FAULTS.length]); draw3dPanels(); }
+  else if (d.alertSee) { const a = S.alerts.find(x => x.id === d.alertSee); viewer && viewer.setMode('explode'); $('mT').textContent = a.title; $('mD').textContent = a.text; $('stage3d').scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+  else if (d.alertFix) { S.alerts = S.alerts.filter(x => x.id !== d.alertFix); viewer && viewer.setAlerts(S.alerts); toast('ok', 'Marked as resolved'); draw3dPanels(); }
+  else if (d.alertAsk) { const a = S.alerts.find(x => x.id === d.alertAsk); S.tab = 'chat'; render(); sendChat(`${a.title}: can you help?`); }
+});
+
+// ---------- chat ----------
+S.chat = [{ from: 'bot', text: '' }];
+const QUICK = () => [`Where is ${robot().name}?`, 'How does Levia work?', 'Any problems?', 'Robot is stuck', 'Is it safe around people?', 'Clean Meeting Room A tonight', 'Skip the lounge tonight', 'Order detergent', 'Help topics', 'Talk to a person'];
+// knowledge base: how Levia works, troubleshooting and everyday questions. First match wins, so specific entries come first.
+const KB = [
+  // troubleshooting
+  [/stuck|trapped|can.?t move|blocked/, r => `Sorry about that. Let’s free ${r.name}:\n1. Open Map to see where it stopped.\n2. Remove what blocks it (cables, a chair, a bag). Don’t lift it by the fans.\n3. Tap “Resume” on Home.\nIf it stops again in the same spot, I’ll mark the area as “avoid” and a technician will check it. Want me to restart it now? Say “restart”.`],
+  [/restart|reboot|reset/, r => `Restarting ${r.name}… done. It ran a 30-second self-test: sensors, fans, brushes and UV-C lamp all OK. It goes back to where it left off.`],
+  [/not charg|won.?t charg|charging|battery (?:low|dead)|dock/, r => `If ${r.name} isn’t charging:\n1. Check the Hub is plugged in (its front light should be on).\n2. Make sure nothing blocks the bay entrance.\n3. Wipe the two metal contacts in the bay with a dry cloth.\nThen send it back from More → Robot & Hub. If the Hub light is off or red, I’ll book a technician (usually next working day).`],
+  [/offline|no connection|disconnect|wi.?fi|internet|network/, r => `${r.name} needs Wi-Fi to report live, but it keeps cleaning offline and syncs when it reconnects. Check the building Wi-Fi on the floor where it stopped. If it stays offline for over an hour, our team gets an alert automatically.`],
+  [/leak|water on the floor|puddle|wet floor|slippery/, () => `Levia leaves only a thin film of water that dries in a few minutes. If you see a puddle, the tank seal may be loose: open the tank (top cover, blue lid), press it back into place, and report it. Washing pauses automatically if the tank loses pressure.`],
+  [/smell|odou?r|stink/, () => `A bad smell usually means the dust bin in the Hub is full or the mop pad needs washing. The Hub empties the robot every night; the Hub bins should be emptied weekly. You can also lower or change the scent in More → Air & scent.`],
+  [/noise|noisy|loud|sound|db\b/, () => `On wheels Levia is about as loud as a quiet vacuum (around 55 dB). Short flights between floors are louder for a few seconds, which is why flights happen when the building is empty. “Quiet mode” (Rooms & rules) keeps it on wheels only.`],
+  [/missed|didn.?t clean|not cleaned|dirty|skipped|corner/, r => `Sorry! Common reasons: the room was booked late, the door was locked, or furniture blocked access. I’ve added the area to tonight’s plan. If it keeps happening, report it in More → Maintenance and we’ll update the 3D map.`],
+  [/error|red light|beep|warning|alarm went/, r => `A red ring or a beep means ${r.name} needs attention. Open the 3D tab and tap “Robot”: the part with the problem is marked in red with what to do. You can also say “any problems?” and I’ll list them.`],
+  // how it works
+  [/how (?:does|do).*(?:work|clean)|how it works|explain|what (?:does|can) (?:it|levia) do/, r => `How ${r.name} works, in 6 steps:\n1. Scan: the first night it maps every floor in 3D.\n2. Plan: it reads your schedule, room bookings and rules.\n3. Clean: it vacuums, then washes hard floors with water.\n4. Sanitize: a second pass with UV-C light on the clean floor.\n5. Move: it flies through the atrium to the next floor, and opens doors with its arm.\n6. Hub: it sorts the waste, refills water, recharges, and sends you a report.\nAsk me about any step!`],
+  [/safe|people|person|someone in|security guard|night staff|children|kids/, () => `Safety first: Levia flies only through empty areas, its propellers are inside guards, and 360° sensors stop it if a person or obstacle is detected. If someone is in a room, it skips it and comes back later. The UV-C lamp switches off immediately when a person is detected.`],
+  [/uv|sanit|disinfect|germ|bacteria|hygien/, () => `After vacuuming and washing, Levia makes a second pass with a UV-C lamp under its body. UV-C light sanitizes hard floors. It never runs near people: the lamp turns off as soon as a person is detected. You choose which rooms get UV-C in More → Cleaning modes.`],
+  [/wash|mop|floor type|carpet|parquet|wood|tile|marble|rug/, () => `Levia vacuums every floor. Hard floors (tiles, stone, vinyl, concrete) are also washed with water from a small tank. Wood and parquet get a low-water mode, carpets and rugs are vacuumed only. It recognises the surface with its camera.`],
+  [/fly|flight|atrium|stairs|another floor|between floors|lift|elevator/, () => `Levia cleans on wheels and flies only to change floor, through an open atrium or stairwell, for a few seconds. In buildings without an open space it cleans one floor at a time. It never flies to clean.`],
+  [/scan|map|3d|furniture|moved|layout|renovat/, r => `On the first night Levia scans every floor with LiDAR and builds a 3D model (you can see it in the 3D tab → Building). It updates the map every night, so moved desks or a new room are picked up automatically.`],
+  [/door|lock|key|access|badge/, () => `Door sensors tell Levia if a door is open. The robotic arm opens doors with standard handles; badge doors open through your access-control system. If a rule says so, it closes and locks the door after cleaning. Locking rules need admin approval.`],
+  [/battery|autonomy|how long|hours|recharg/, r => `${r.name} works 6–8 hours per charge, mostly on wheels. Below 20% it drives back to the Hub, recharges and continues the plan. One robot covers up to about 1,500 m² per night.`],
+  [/waste|bin|trash|rubbish|recycl|empty the/, () => `Levia keeps dust, paper and plastic apart. At the Hub they go into three bins. Empty the Hub bins about once a week; the app tells you when one is 80% full.`],
+  [/hub|station|base/, () => `The Hub is Levia’s home: it charges the robot, empties its waste into three sorted bins and refills its water tank. It needs about 2 × 2.5 m near a power socket and a water tap.`],
+  [/privacy|camera|data|gdpr|record|video|photo/, () => `The camera is used only to recognise surfaces, obstacles, doors and lost items. Processing happens on the robot, and no images of people are stored. Building maps and reports are kept on EU servers, under GDPR.`],
+  [/calendar|booking|outlook|google|meeting/, () => `Levia syncs with Microsoft 365 / Outlook or Google Workspace room calendars. Booked rooms are skipped and cleaned as soon as the booking ends. You can see this in the Schedule tab.`],
+  [/plant|cable|wire|small object|pet|dog|cat/, () => `Levia avoids cables, plants and small objects. Small items like keys or badges are picked up and logged in Lost & found. Pets should not stay in the building at night.`],
+  [/holiday|weekend|change.*schedule|different time|earlier|later/, () => `You can change days and start times in the Schedule tab. For holidays, turn off the days you don’t need. Levia also waits until the last person leaves, using badges and motion sensors.`],
+  [/add (?:a |another )?robot|more robots|second robot|bigger building|new floor/, () => `To add a robot or more floors, go to More → My robots → “Request another Levia”. We scan the new area and send an updated quote.`],
+  [/cancel|contract|end the plan|terminate|renew/, () => `Your continuous plan runs 36 months. You can change it or add robots at any time; for cancellations before the end, contact our team and we’ll go through the options with you.`],
+  [/damag|broke something|scratch|insurance|warranty/, () => `Robot repairs, parts and insurance are included in your plan. If Levia ever damages something, report it here with a photo and our team will handle the claim.`],
+  [/trial|demo|try/, () => `New buildings can try Levia free for 14 days on one floor. Ask your colleagues to request it from our website chat.`],
+];
+const TOPICS = ['How does Levia work?', 'Is it safe around people?', 'How does UV-C work?', 'Which floors can it wash?', 'Robot is stuck', 'Not charging', 'Water on the floor', 'Privacy and camera', 'Battery and Hub'];
+function botReply(q) {
+  const t = q.toLowerCase(), r = robot(), room = Object.values(FLOORS).flatMap(f => f.rooms).find(x => t.includes(x.name.toLowerCase()) || t.includes(x.name.toLowerCase().split(' ')[0]) && x.name.split(' ').length === 1);
+  if (/talk to|a person|real person|^person$|human|agent|operator|support team|call me/.test(t)) { S.agent = true; return [{ from: 'agent', who: 'Giada · Levia support', text: `Hi ${P.user}, Giada here. I can see ${r.name}’s live status and your building. I’ve opened ticket LV-${2042 + S.chat.length % 7} so nothing gets lost. How can I help?` }]; }
+  if (/help topics|^help$|topics|what can you/.test(t)) return [{ from: 'bot', text: 'I can help with how Levia works, safety, cleaning and UV-C, problems like a stuck robot or charging, supplies, visits, billing and your rooms. Pick a topic below or just ask.', topics: true }];
+  for (const [re, fn] of KB.slice(0, 9)) if (re.test(t)) return [{ from: 'bot', text: fn(r) }];
+  if (/problem|broke|broken|fault|alert|wrong|help/.test(t)) {
+    if (!S.alerts.length) return [{ from: 'bot', text: `${r.name} is healthy: all parts are working well.` }];
+    const red = S.alerts.find(a => a.level === 'red');
+    return [{ from: 'bot', text: `${r.name} has ${S.alerts.length} alert${S.alerts.length > 1 ? 's' : ''}: ${S.alerts.map(a => a.title.toLowerCase()).join('; ')}.` + (red ? ` The ${red.title.toLowerCase()} needs attention now. I’ve sent it to our technicians, who usually reply within 30 minutes. Open the 3D tab and tap “Robot” to see where it is.` : ' Nothing urgent.') }];
+  }
+  if (/where is|where's|status|doing|right now/.test(t)) { const c = current(); return [{ from: 'bot', text: `${r.name} is ${c.label.toLowerCase()} on ${FLOORS[c.floor].name}. Battery ${S.battery}%. ${S.running ? `Tonight’s plan is ${Math.round(['F1', 'F2', 'F3'].reduce((a, f) => a + floorProgress(f), 0) / 3 * 100)}% done.` : 'The shift starts at 19:30.'}` }]; }
+  if (room && /skip|don.?t|avoid|not/.test(t)) { if (S.rules[room.id]) S.rules[room.id].nightly = false; return [{ from: 'bot', text: `Done. ${room.name} will be skipped tonight. It goes back to normal tomorrow.` }]; }
+  if (room && /clean|wash|uv|sanit|vacuum/.test(t)) { const m = S.cmodes[room.id]; if (m && /wash/.test(t)) m.wash = 1; if (m && /uv|sanit/.test(t)) m.uv = 1; return [{ from: 'bot', text: `Added ${room.name} to tonight’s plan${S.cmodes[room.id] ? ` (${['vacuum', S.cmodes[room.id].wash && 'wash', S.cmodes[room.id].uv && 'UV-C'].filter(Boolean).join(' + ')})` : ''}. If it’s booked, ${r.name} waits until the booking ends.` }]; }
+  if (/deterg|soap|suppl|refill/.test(t)) return [{ from: 'bot', text: `Your detergent is at ${S.detergent}%, enough for about ${Math.floor(S.detergent / 4.5)} nights. Want me to order 2 × 5 L from our partner? Just say “yes, order”.` }];
+  if (/yes.*order|order it|^order/.test(t)) { return [{ from: 'bot', text: 'Ordered: 2 × 5 L detergent, arriving in 2 days. I’ll remind the team to place it in the Hub.' }]; }
+  if (/visit|technician|maint|repair/.test(t)) return [{ from: 'bot', text: 'Next technician visit: Tuesday 14 Oct, 08:00–09:00. Planned: side brushes and mop pad swap. You don’t need to be there.' }];
+  if (/lost|keys|found|wallet|phone/.test(t)) return [{ from: 'bot', text: S.min >= 41 ? `Last night ${r.name} found keys with a red tag on Floor 2, under desk 2. They’re at reception${S.keysCollected ? ' and have been collected' : ''}.` : 'No lost items found yet tonight.' }];
+  if (/price|bill|invoice|plan|cost|pay/.test(t)) return [{ from: 'bot', text: 'You’re on the continuous plan: €457 a month for 36 months (month 9). It includes the robot, the Hub, 4 technician visits a year, parts and support. Invoices are under More → Plan & billing.' }];
+  if (/scent|smell|air/.test(t)) return [{ from: 'bot', text: `The scent is ${S.scentLabel || 'Cedar & Bergamot'} at ${S.scentLevel}%. You can change it under More → Air & scent.` }];
+  for (const [re, fn] of KB.slice(9)) if (re.test(t)) return [{ from: 'bot', text: fn(r) }];
+  if (/\b(hi|hello|hey|ciao)\b/.test(t)) return [{ from: 'bot', text: `Hi ${P.user}! What can I do for you and ${r.name}?` }];
+  if (S.agent) return [{ from: 'agent', who: 'Giada · Levia support', text: 'Thanks, noted. I’ll look into it and reply here within the hour.' }];
+  return [{ from: 'bot', text: `I’m not sure about that one. I can help with how ${r.name} works, problems, rooms to clean or skip tonight, supplies, visits, lost items and billing. Pick a topic, or type “person” to reach our support team.`, topics: true }];
+}
+function sendChat(text) {
+  text = text.trim(); if (!text) return;
+  S.chat.push({ from: 'me', text }); S.typing = true; render();
+  setTimeout(() => { S.typing = false; S.chat.push(...botReply(text)); render(); }, 750);
+}
+function chatView() {
+  S.chat[0].text = `Hi ${P.user}! I’m the Levia assistant. Ask me anything about ${robot().name}, or talk to a person from our support team.`;
+  return `<h1>Chat</h1><div class="sub">Levia assistant · support team online 8:00–20:00</div>
+  <div class="msgs" id="msgs">${S.chat.map((m, k) => `<div class="msg ${m.from}" style="white-space:pre-line">${m.who ? `<span class="who">${esc(m.who)}</span>` : ''}${esc(m.text)}</div>${m.topics && k === S.chat.length - 1 ? `<div class="chips">${TOPICS.map(q => `<button class="chip" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>` : ''}`).join('')}${S.typing ? '<div class="msg bot typing">typing…</div>' : ''}</div>
+  <div class="quick">${QUICK().map(q => `<button class="chip" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>
+  <form class="composer" id="composer"><input id="chatIn" placeholder="Message" autocomplete="off" aria-label="Message"><button type="submit">Send</button></form>`;
+}
+
+// ---------- robot picker sheet ----------
+function openSheet() {
+  $('sheet').innerHTML = `<b style="font-size:17px">Choose robot</b>${P.robots.map(r => `<button class="robotbtn" data-robot="${r.id}"><span class="dot">${robotIcon}</span><span style="flex:1"><b>${esc(r.name)}</b><small>${esc(r.building)} · ${r.floors} floors</small></span>${r.id === P.active ? '<span class="pill p-led"><i></i>Active</span>' : ''}</button>`).join('')}`;
+  $('sheet').classList.add('show'); $('scrim').classList.add('show');
+}
+function closeSheet() { $('sheet').classList.remove('show'); $('scrim').classList.remove('show'); }
+$('scrim').addEventListener('click', closeSheet);
+$('sheet').addEventListener('click', e => { const b = e.target.closest('[data-robot]'); if (!b) return; if (b.dataset.robot !== P.active) { switchRobot(b.dataset.robot); toast('led', `Switched to ${robot().name}`); } closeSheet(); render(); });
+
+// ---------- onboarding: one compact page ----------
+const draft = {};
+function onb() {
+  const el = $('onb'); el.hidden = false;
+  const v = (k, d) => esc(draft[k] ?? d);
+  el.innerHTML = `<div class="onbcard">
+    <div class="tag mono" style="color:var(--led);font-size:11px;letter-spacing:1.4px">WELCOME TO LEVIA</div>
+    <h1>Set up your app</h1>
+    <div class="ogrid"><label class="field">Company<input id="oCompany" value="${v('company', P.company)}"></label><label class="field">Your name<input id="oUser" value="${v('user', P.user)}"></label></div>
+    <label class="field">Name your robot<input id="oName" maxlength="18" value="${v('name', robot().name)}"></label>
+    <div class="chips">${NAME_IDEAS.map(n => `<button class="chip" data-oidea="${n}">${n}</button>`).join('')}</div>
+    <div class="field">App colour<div class="swatches" role="group" aria-label="App colour">${ACCENTS.map(([h, n]) => `<button data-oaccent="${h}" aria-pressed="${(draft.accent || P.accent) === h}" aria-label="${n}" title="${n}" style="background:${h}"></button>`).join('')}</div></div>
+    <button class="btn btn-primary" id="oNext">Open my app</button>
+  </div>`;
+}
+$('onb').addEventListener('click', e => {
+  const t = e.target.closest('button'); if (!t) return;
+  for (const [k, id] of [['company', 'oCompany'], ['user', 'oUser'], ['name', 'oName']]) if ($(id)) draft[k] = $(id).value.trim() || draft[k];
+  if (t.dataset.oidea) { $('oName').value = draft.name = t.dataset.oidea; return; }
+  if (t.dataset.oaccent) { draft.accent = t.dataset.oaccent; applyAccent(draft.accent); onb(); return; }
+  if (t.id === 'oNext') {
+    if (draft.company) P.company = draft.company; if (draft.user) P.user = draft.user; if (draft.accent) P.accent = draft.accent;
+    if (draft.name) robot().name = draft.name;
+    P.onboarded = true; save(); $('onb').hidden = true; applyAccent(P.accent); render(); toast('ok', `Welcome, ${P.user}. Say hi to ${robot().name}!`);
+  }
+});
+
+// ---------- theme + accent ----------
+function applyAccent(h) { document.documentElement.style.setProperty('--accent', h); if (viewer) viewer.setAccent(h); if (bld) bld.setAccent(h); }
+function applyTheme() { if (P.theme === 'system') document.documentElement.removeAttribute('data-theme'); else document.documentElement.dataset.theme = P.theme; }
+
+// ---------- render + events ----------
+const SUBS = { personal: personalView, robots: robotsView, rules: rulesView, cmodes: cmodesView, lost: lostView, air: airView, supplies: suppliesView, maint: maintView, report: reportView, robot: robotView, team: teamView, billing: billingView, settings: settingsView };
+function render() {
+  const v = $('view'), keep = S.lastView === S.tab + (S.sub || ''), scroll = v.scrollTop;
+  document.querySelectorAll('.tab').forEach(t => { if (t.dataset.tab === S.tab) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
+  $('clock').textContent = clockAt(S.min); $('sbatt').textContent = S.battery + '%';
+  show3d(S.tab === '3d'); if (S.tab === '3d') { S.lastView = '3d'; return; }
+  if (keep && v.contains(document.activeElement) && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return; // don't wipe a form being typed in
+  const map = { home, map: mapView, chat: chatView, schedule: scheduleView, more: () => (SUBS[S.sub] || moreView)() };
+  v.innerHTML = map[S.tab]();
+  v.scrollTop = S.tab === 'chat' ? v.scrollHeight : keep ? scroll : 0; S.lastView = S.tab + (S.sub || '');
+  v.classList.toggle('chatview', S.tab === 'chat');
+}
+document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (!b) return; S.tab = b.dataset.tab; S.sub = null; render(); });
+$('view').addEventListener('click', e => {
+  const t = e.target.closest('button'); if (!t || t.closest('form')) return;
+  const r = robot();
+  if (t.id === 'start') { S.running = true; S.paused = false; pushEvents(-1, 0); }
+  else if (t.id === 'pause') S.paused = !S.paused;
+  else if (t.id === 'faster') S.speed = S.speed > 1 ? 1 : 4;
+  else if (t.id === 'report') { S.tab = 'more'; S.sub = 'report'; }
+  else if (t.id === 'pickRobot') { openSheet(); return; }
+  else if (t.id === 'collect') { S.keysCollected = true; toast('ok', 'Keys marked as collected'); }
+  else if (t.id === 'sendTo') toast('led', S.running ? `${r.name} will continue on ${FLOORS[S.floorView].name}` : 'Start the shift first');
+  else if (t.id === 'savePersonal') { r.name = $('inName').value.trim() || r.name; r.building = $('inBuilding').value.trim() || r.building; P.company = $('inCompany').value.trim() || P.company; P.user = $('inUser').value.trim() || P.user; save(); toast('ok', `Saved · say hi to ${r.name}`); document.activeElement.blur(); }
+  else if (t.dataset.idea) { $('inName').value = t.dataset.idea; return; }
+  else if (t.dataset.accent) { P.accent = t.dataset.accent; save(); applyAccent(P.accent); }
+  else if (t.id === 'redoOnb') { Object.keys(draft).forEach(k => delete draft[k]); onb(); return; }
+  else if (t.dataset.robot) { switchRobot(t.dataset.robot); toast('led', `Switched to ${robot().name}`); }
+  else if (t.id === 'addRobot') toast('led', 'Request sent · our team will plan the 3D scan');
+  else if (t.dataset.cm) { const [id, k] = t.dataset.cm.split('.'); if (k === 'vac' && S.cmodes[id].vac && !S.cmodes[id].wash && !S.cmodes[id].uv) { toast('amber', 'Every room needs at least one mode'); return; } S.cmodes[id][k] = S.cmodes[id][k] ? 0 : 1; }
+  else if (t.id === 'refilled') { S.detergent = 100; toast('ok', 'Detergent level reset to 100%'); }
+  else if (t.id === 'orderDet') toast('ok', '2 × 5 L detergent ordered · arrives in 2 days');
+  else if (t.id === 'sendTicket') { const id = 'LV-' + (2041 + S.tickets.length); S.tickets.unshift({ id, cat: $('tCat').value, txt: $('tTxt').value.trim() }); toast('ok', `${id} sent to Levia support`); document.activeElement.blur(); }
+  else if (t.id === 'invite') { const n = $('invName').value.trim(); if (!n) { toast('amber', 'Add a name first'); return; } S.team.push([n, 'Invited', $('invRole').value]); toast('ok', `${n} invited`); document.activeElement.blur(); }
+  else if (t.dataset.notify) { P.notify[t.dataset.notify] = !P.notify[t.dataset.notify]; save(); }
+  else if (t.dataset.themeSet) { P.theme = t.dataset.themeSet; save(); applyTheme(); }
+  else if (t.dataset.sounds !== undefined) { P.sounds = !P.sounds; save(); }
+  else if (t.dataset.day) t.setAttribute('aria-pressed', String(t.getAttribute('aria-pressed') !== 'true'));
+  else if (t.dataset.go) { S.tab = t.dataset.go; S.sub = null; }
+  else if (t.dataset.subGo) { S.tab = 'more'; S.sub = t.dataset.subGo; }
+  else if (t.dataset.floor) S.floorView = t.dataset.floor;
+  else if (t.dataset.q) { sendChat(t.dataset.q); return; }
+  else if (t.dataset.alertGo) { S.tab = '3d'; v3mode = 'bot'; }
+  else if (t.dataset.sub !== undefined) S.sub = t.dataset.sub || null;
+  else if (t.dataset.rule) { const [id, k] = t.dataset.rule.split('.'); S.rules[id][k] = !S.rules[id][k]; toast(S.rules[id][k] ? 'ok' : 'amber', `${RULE_LABELS[k][0]}: ${S.rules[id][k] ? 'on' : 'off'}`); }
+  else if (t.dataset.static !== undefined) { t.setAttribute('aria-checked', String(t.getAttribute('aria-checked') !== 'true')); return; }
+  else if (t.dataset.scent) { S.scent = t.dataset.scent; S.scentLabel = SCENTS.find(s => s[0] === S.scent)[1]; toast('violet', `Scent set to ${S.scentLabel}`); }
+  else return;
+  render();
+});
+$('view').addEventListener('submit', e => { if (e.target.id === 'composer') { e.preventDefault(); const t = $('chatIn').value; $('chatIn').value = ''; $('chatIn').blur(); sendChat(t); } });
+$('view').addEventListener('input', e => { if (e.target.id === 'lvl') S.scentLevel = +e.target.value; });
+$('view').addEventListener('change', e => { if (e.target.id === 'lvl') render(); });
+// simulated night: 1 real second = 1 minute (4 with fast-forward)
+setInterval(() => {
+  if (!S.running || S.paused || S.min >= 118) return;
+  const prev = S.min; S.min = Math.min(118, S.min + .5 * S.speed);
+  S.battery = S.min >= 118 ? 100 : Math.max(41, Math.round(96 - S.min * .45));
+  if (Math.floor(prev / 30) !== Math.floor(S.min / 30)) S.detergent = Math.max(5, S.detergent - 1);
+  pushEvents(prev, S.min);
+  if (prev < 60 && S.min >= 60 && P.active === 'r1') addAlert({ id: 'fan', part: 'Guarded ducted fans', level: 'red', short: 'Fan 3 vibration', title: 'Fan 3: unusual vibration', text: 'Flight limited to short hops until checked. A technician is booked for tomorrow 09:00.' });
+  const c = current(); if (c.floor !== S.robotFloor) { S.robotFloor = c.floor; S.floorView = c.floor; }
+  if (S.tab === '3d') { $('clock').textContent = clockAt(S.min); $('sbatt').textContent = S.battery + '%'; if (prev < 60 && S.min >= 60) draw3dPanels(); return; }
+  if (!document.activeElement || document.activeElement.id !== 'lvl') render();
+}, 500);
+applyTheme(); applyAccent(P.accent); render();
+if (!P.onboarded) onb();
+</script>

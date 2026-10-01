@@ -1,0 +1,657 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Levia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --ground:#EEF2F4; --paper:#FFFFFF; --ink:#0F1A22; --muted:#56656E; --line:#D7DFE4;
+  --night:#0A141B; --night-2:#112129; --night-text:#E7EEF2; --night-muted:#9DB0BB;
+  --led:#127FB0; --led-bright:#4FC3F7; --amber:#B86E10;
+  --display:'Syne','Trebuchet MS',sans-serif; --body:'Figtree','Helvetica Neue',Arial,sans-serif; --mono:'JetBrains Mono',Menlo,monospace;
+  --max:1180px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ color-scheme:dark; --ground:#0D161C; --paper:#131E25; --ink:#E5EDF1; --muted:#9AABB4; --line:#24323B; --led:#4FC3F7; --amber:#F2B24A; } }
+:root[data-theme="dark"]{ color-scheme:dark; --ground:#0D161C; --paper:#131E25; --ink:#E5EDF1; --muted:#9AABB4; --line:#24323B; --led:#4FC3F7; --amber:#F2B24A; }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img,video{max-width:100%;display:block}
+:focus-visible{outline:2px solid var(--led-bright);outline-offset:3px}
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:24px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--led)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+h2{font-size:clamp(32px,4.4vw,52px);line-height:1.05;font-weight:700}
+h3{font-size:21px;line-height:1.2;font-weight:700}
+p{margin:0}
+.lead{font-size:clamp(17px,1.6vw,20px);color:var(--muted);max-width:60ch}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:999px;font-weight:700;font-size:16px;text-decoration:none;border:1px solid transparent;cursor:pointer;font-family:var(--body)}
+.btn-led{background:var(--led-bright);color:#04121A}
+.btn-line{border-color:rgba(231,238,242,.35);color:var(--night-text);background:transparent}
+.btn-ink{background:var(--ink);color:var(--paper)}
+section{padding-block:96px}
+
+/* header */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(10,20,27,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.logo{font-family:var(--display);font-weight:800;font-size:24px;color:var(--night-text);text-decoration:none;letter-spacing:.4px}
+nav ul{display:flex;gap:26px;list-style:none;margin:0;padding:0}
+nav a{color:var(--night-muted);text-decoration:none;font-size:15px;font-weight:600}
+nav a:hover{color:var(--night-text)}
+header .btn{padding:10px 18px;font-size:14px}
+
+/* hero */
+.hero{background:var(--night);color:var(--night-text);padding-block:72px 0;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:52px;align-items:center}
+.hero h1{font-size:clamp(44px,5.6vw,78px);line-height:.98;font-weight:800;letter-spacing:-.5px}
+.hero h1 span{color:var(--led-bright)}
+.hero .lead{color:var(--night-muted);margin-top:22px}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
+.hero-media{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:16/11;background:#0E1A22;box-shadow:0 40px 80px rgba(0,0,0,.45)}
+.hero-media video,.hero-media img{width:100%;height:100%;object-fit:cover}
+.hero-media .badge{position:absolute;left:16px;bottom:16px;display:flex;gap:8px;align-items:center;background:rgba(6,14,19,.78);padding:8px 12px;border-radius:999px;font-family:var(--mono);font-size:12px;color:var(--night-text)}
+.hero-media .badge i{width:8px;height:8px;border-radius:50%;background:#5AC878;box-shadow:0 0 0 4px rgba(90,200,120,.2)}
+.specs{display:grid;grid-template-columns:repeat(4,1fr);margin-top:72px;border-top:1px solid rgba(255,255,255,.08)}
+.specs div{padding:22px 0 30px;border-right:1px solid rgba(255,255,255,.08);padding-left:20px}
+.specs div:first-child{padding-left:0}
+.specs div:last-child{border-right:none}
+.specs b{display:block;font-family:var(--display);font-size:20px}
+.specs span{font-size:14px;color:var(--night-muted)}
+
+/* film */
+.film{background:var(--night-2);color:var(--night-text);padding-block:88px}
+.film .head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:28px}
+.film .lead{color:var(--night-muted)}
+.player{position:relative;border-radius:20px;overflow:hidden;background:#000;aspect-ratio:16/9}
+.player video{width:100%;height:100%}
+
+/* night timeline */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:48px}
+.step{background:var(--paper);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.step img{aspect-ratio:16/10;object-fit:cover;width:100%}
+.step .txt{padding:18px 20px 22px;display:flex;flex-direction:column;gap:8px}
+.step .t{font-family:var(--mono);font-size:12px;color:var(--led);letter-spacing:1px}
+.step p{color:var(--muted);font-size:15px}
+
+/* capabilities */
+.caps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:48px;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.cap{padding:22px 18px 26px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px;background:var(--paper)}
+.cap svg{width:28px;height:28px;color:var(--led)}
+.cap b{font-size:16px}
+.cap span{font-size:14px;color:var(--muted);line-height:1.45}
+
+/* product */
+.product{display:grid;grid-template-columns:1.25fr 1fr;gap:56px;align-items:center}
+.product img{border-radius:20px;width:100%;aspect-ratio:4/3;object-fit:cover}
+.parts{display:grid;grid-template-columns:1fr 1fr;gap:18px 26px;margin-top:28px}
+.parts div{border-top:1px solid var(--line);padding-top:12px}
+.parts b{display:block;font-size:15px}
+.parts span{font-size:14px;color:var(--muted)}
+
+/* business */
+.biz{background:var(--paper);border-block:1px solid var(--line)}
+.segs{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:40px}
+.seg{border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:8px;background:var(--ground)}
+.seg b{font-family:var(--display);font-size:18px}
+.seg span{font-size:14px;color:var(--muted)}
+
+/* pricing */
+.pricing{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:16px;margin-top:44px}
+.plan{border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:12px;border:1px solid var(--line);background:var(--paper)}
+.plan.main{background:var(--night);color:var(--night-text);border-color:var(--night)}
+.plan.main .muted{color:var(--night-muted)}
+.plan .tag{font-family:var(--mono);font-size:12px;letter-spacing:1.5px;color:var(--led)}
+.plan.main .tag{color:var(--led-bright)}
+.plan .price{font-family:var(--display);font-size:34px;font-weight:700}
+.plan .muted{color:var(--muted);font-size:15px}
+.plan ul{margin:6px 0 0;padding-left:18px;font-size:15px;line-height:1.8}
+
+/* app teaser */
+.app{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.app .shot{justify-self:center;width:min(340px,100%);border-radius:40px;overflow:hidden;border:10px solid #10161B;box-shadow:0 30px 70px rgba(15,26,34,.25)}
+.app ul{margin:22px 0 28px;padding-left:20px;color:var(--muted);line-height:1.9}
+
+/* faq */
+.faq{display:grid;grid-template-columns:1fr 1.4fr;gap:56px}
+details{border-bottom:1px solid var(--line);padding:18px 0}
+summary{cursor:pointer;font-weight:700;font-size:18px;list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--led);font-size:22px;line-height:1}
+details[open] summary::after{content:"–"}
+details p{color:var(--muted);margin-top:10px;max-width:62ch}
+
+/* demo */
+.demo{background:var(--night);color:var(--night-text)}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.demo .lead{color:var(--night-muted)}
+form{display:grid;grid-template-columns:1fr 1fr;gap:14px;background:var(--night-2);padding:26px;border-radius:20px;border:1px solid rgba(255,255,255,.06)}
+form .full{grid-column:1/-1}
+label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--night-muted)}
+input,select,textarea{background:#0A141B;border:1px solid #23343F;border-radius:12px;padding:12px 14px;color:var(--night-text);font:inherit;font-size:15px}
+textarea{min-height:96px;resize:vertical}
+.formnote{font-size:13px;color:var(--night-muted)}
+.ok{display:none;grid-column:1/-1;background:rgba(90,200,120,.12);border:1px solid rgba(90,200,120,.35);border-radius:12px;padding:14px;font-size:15px}
+.ok.show{display:block}
+footer{background:#071017;color:var(--night-muted);padding-block:40px;font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer b{font-family:var(--display);color:var(--night-text);font-size:20px}
+
+@media (max-width: 1000px){
+  nav ul{display:none}
+  .hero-grid,.product,.app,.faq,.demo-grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  .caps{grid-template-columns:repeat(2,1fr)}
+  .segs{grid-template-columns:1fr 1fr}
+  .pricing{grid-template-columns:1fr}
+  .specs{grid-template-columns:1fr 1fr}
+  .specs div:nth-child(2){border-right:none}
+  .specs div:nth-child(3){padding-left:0}
+}
+@media (max-width: 600px){
+  section{padding-block:64px}
+  .wrap{padding-inline:16px}
+  .steps,.caps,.segs,.parts{grid-template-columns:1fr}
+  form{grid-template-columns:1fr}
+  header .btn{display:none}
+}
+</style>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#top">Levia</a>
+    <nav aria-label="Main"><ul>
+      <li><a href="#night">How it works</a></li>
+      <li><a href="#capabilities">Capabilities</a></li>
+      <li><a href="#product">Product</a></li>
+      <li><a href="#business">For business</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+    </ul></nav>
+    <a class="btn btn-led" href="#demo" data-open-chat>Free 14-day trial</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow" style="color:var(--led-bright)">Autonomous cleaning for multi-floor buildings</div>
+          <h1 style="margin-top:18px">Cleaning <span>on another level.</span></h1>
+          <p class="lead">Levia drives to clean and flies between floors. One robot looks after the whole building every night, opens doors, follows your room rules and reports back by morning.</p>
+          <div class="ctas"><a class="btn btn-led" href="#demo" data-open-chat>Free 14-day trial</a><a class="btn btn-line" href="#film">Watch the film</a></div>
+        </div>
+        <div class="hero-media">
+          <video src="hero.mp4" poster="img/hero.jpg" autoplay muted loop playsinline aria-label="Levia turning on its dock, then flying up the atrium"></video>
+          <div class="badge"><i></i>Night shift · HQ Building · 3 floors</div>
+        </div>
+      </div>
+      <div class="specs" aria-label="At a glance">
+        <div><b>Vacuums, washes, sanitizes</b><span>Mop with water, UV-C light, and flight between floors</span></div>
+        <div><b>3D building memory</b><span>A fast LiDAR scan before the first clean</span></div>
+        <div><b>Doors and rules</b><span>Robotic arm, door sensors, lock-on-exit</span></div>
+        <div><b>From €457 a month</b><span>A service, not a robot to buy</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="film" id="film">
+    <div class="wrap">
+      <div class="head"><div><div class="eyebrow" style="color:var(--led-bright)">The film · 1 minute</div><h2 style="margin-top:12px">One night with Levia</h2></div><p class="lead">Sara starts the shift from her phone and goes home. By 08:30 the building is clean and the lost keys are at reception.</p></div>
+      <div class="player"><video src="film.mp4" poster="img/wide.jpg" controls preload="metadata" playsinline aria-label="Levia explainer film"></video></div>
+    </div>
+  </section>
+
+  <section id="night">
+    <div class="wrap">
+      <div class="eyebrow">How a night works</div>
+      <h2 style="margin-top:12px">From the first scan to the morning report</h2>
+      <div class="steps">
+        <article class="step"><img src="img/scan.jpg" alt="Blue LiDAR outlines of every room across three floors" loading="lazy"><div class="txt"><span class="t">19:30 · SCAN</span><h3>Maps the whole building</h3><p>A quick flight through every floor builds a 3D model of rooms, halls, stairs and furniture.</p></div></article>
+        <article class="step"><img src="img/clean.jpg" alt="Levia vacuuming the lobby floor" loading="lazy"><div class="txt"><span class="t">19:48 · CLEAN</span><h3>Vacuums and washes, room by room</h3><p>Side brushes, suction and a water-fed mop pad. Booked rooms are skipped and cleaned after the meeting.</p></div></article>
+        <article class="step"><img src="img/fly.jpg" alt="Levia flying up the atrium past the staircase" loading="lazy"><div class="txt"><span class="t">20:12 · FLY</span><h3>Changes floors by air</h3><p>No stairs, no lifts. It takes off in the atrium, clears the railing and lands on the next floor.</p></div></article>
+        <article class="step"><img src="img/door.jpg" alt="Levia's arm opening the server room door" loading="lazy"><div class="txt"><span class="t">20:31 · ACCESS</span><h3>Opens doors, then locks up</h3><p>Door sensors and a robotic arm. The server room is closed and locked again, as the rule says.</p></div></article>
+        <article class="step"><img src="img/dock.jpg" alt="Levia at its Hub with three sorted waste bins and a clean-water tank" loading="lazy"><div class="txt"><span class="t">21:06 · HUB</span><h3>Back to the Hub</h3><p>Dust, paper and plastic go into separate bins, the water tank is refilled and Levia recharges.</p></div></article>
+        <article class="step"><img src="img/morning.jpg" alt="Morning lobby with a visitor collecting her keys at reception" loading="lazy"><div class="txt"><span class="t">08:30 · REPORT</span><h3>Wakes up to a clean building</h3><p>A full report in the app, and lost items waiting at reception for their owners.</p></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="capabilities" style="padding-top:0">
+    <div class="wrap">
+      <div class="eyebrow">Capabilities</div>
+      <h2 style="margin-top:12px">Ten things one robot does</h2>
+      <div class="caps" id="caps"></div>
+    </div>
+  </section>
+
+  <section id="product" style="padding-top:0">
+    <div class="wrap product">
+      <img src="img/product.jpg" alt="Levia close-up with labels: ducted fans, LiDAR, AI camera, robotic arm, brushes, HEPA filter, waste bins and wheels" loading="lazy">
+      <div>
+        <div class="eyebrow">The product</div>
+        <h2 style="margin-top:12px">Built to work alone, safely</h2>
+        <div class="parts">
+          <div><b>Guarded ducted fans</b><span>Shrouded propellers for indoor flight</span></div>
+          <div><b>LiDAR + 360° sensors</b><span>Maps rooms and avoids obstacles</span></div>
+          <div><b>AI camera</b><span>Sees doors, people and lost items</span></div>
+          <div><b>Robotic arm</b><span>Opens doors, picks up items, swaps brushes</span></div>
+          <div><b>Brushes, suction, mop + UV</b><span>Edges and dust, a wash with water, UV-C sanitizing</span></div>
+          <div><b>HEPA filter + scent</b><span>Cleans the air and adds fragrance</span></div>
+          <div><b>Water tank + waste bins</b><span>Small tank for washing, three sorted bins</span></div>
+          <div><b>The Hub</b><span>Empties the bins, refills water, recharges</span></div>
+        </div>
+        <p style="margin-top:24px"><a href="https://growmi.github.io/levia/walkthrough/" style="color:var(--led);font-weight:700">Explore Levia in 3D →</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="biz" id="business">
+    <div class="wrap">
+      <div class="eyebrow">For business</div>
+      <h2 style="margin-top:12px">Made for offices with more than one floor</h2>
+      <div class="segs">
+        <div class="seg"><b>Offices</b><span>Many floors and meeting rooms, cleaned after hours.</span></div>
+        <div class="seg"><b>Corporate headquarters</b><span>Server rooms, executive floors and strict access rules.</span></div>
+        <div class="seg"><b>Coworking</b><span>Room bookings already live in a calendar.</span></div>
+        <div class="seg"><b>Business centres</b><span>Several companies, one building, one cleaning standard.</span></div>
+        <div class="seg"><b>Not for homes</b><span>Levia is a B2B service for business buildings.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <div class="eyebrow">Pricing</div>
+      <h2 style="margin-top:12px">A cleaning service, not a machine to buy.</h2>
+      <div class="pricing">
+        <div class="plan main"><span class="tag">CONTINUOUS PLAN</span><div class="price">€457 / month</div><p class="muted">Example: 600 m² office, 36-month plan. €9.13 per m² a year, against €14–22 for a typical cleaning contract. You supply water and detergent.</p><ul><li>Robot, Hub and app included</li><li>4 technician visits a year, parts and support</li><li>Insurance and software updates</li><li>12-month plan: +8%</li></ul></div>
+        <div class="plan"><span class="tag">SINGLE SERVICE</span><div class="price">€1.12 / m²</div><p class="muted">One night of cleaning, for example €672 for 600 m². Levia supplies the water and detergent. For events, one-off deep cleans or before you commit.</p></div>
+        <div class="plan"><span class="tag">ONE-TIME SETUP</span><div class="price">€650</div><p class="muted">Hub installation, the first 3D scan of every floor, and connection to your doors and room calendar. Start with a free 14-day trial on one floor.</p></div>
+      </div>
+      <p class="muted" style="margin-top:18px;font-size:14px">Estimates excluding VAT. Your quote depends on floor area and number of floors.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap app">
+      <div>
+        <div class="eyebrow">The app</div>
+        <h2 style="margin-top:12px">The whole building in your pocket</h2>
+        <ul>
+          <li>Start, pause or redirect the night shift</li>
+          <li>Live floor plan with the robot’s position</li>
+          <li>Room rules, quiet hours and calendar sync</li>
+          <li>Lost & found, air quality and scent</li>
+          <li>A night report waiting every morning</li>
+        </ul>
+        <a class="btn btn-ink" href="https://growmi.github.io/levia/app/">Try the app prototype</a>
+      </div>
+      <img class="shot" src="img/app.jpg" alt="Levia app showing floor progress and activity" loading="lazy">
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap faq">
+      <div><div class="eyebrow">Questions</div><h2 style="margin-top:12px">What people ask first</h2></div>
+      <div>
+        <details><summary>Is it safe to fly indoors?</summary><p>Levia flies only in empty zones, after hours. The propellers sit inside guarded ducts, and LiDAR plus obstacle sensors keep it clear of people and furniture. Most of the work happens on wheels; flight is for changing floors and reaching high places.</p></details>
+        <details><summary>Doesn’t flying blow dust around?</summary><p>Levia cleans an area first and flies afterwards, with slow, low landings. The HEPA filter also cleans the air while it flies.</p></details>
+        <details><summary>How does it open and lock doors?</summary><p>Door sensors report which rooms are open. The robotic arm handles standard doors, and locking only happens through your building’s access-control system, with admin approval.</p></details>
+        <details><summary>What about privacy?</summary><p>Images are processed on the robot, people are blurred, and building data stays in the building.</p></details>
+        <details><summary>What happens to lost items?</summary><p>The camera recognises keys, badges and phones. The arm picks them up, the app logs where they were found, and they wait at reception.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo" id="demo">
+    <div class="wrap demo-grid">
+      <div>
+        <div class="eyebrow" style="color:var(--led-bright)">Free 14-day trial</div>
+        <h2 style="margin-top:12px">Try Levia in your building</h2>
+        <p class="lead" style="margin-top:18px">Chat with our assistant: describe your building, add a few photos and see a 3D preview of it. Then we scan one floor and clean it for 14 nights, for free.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;align-self:center">
+        <button class="btn btn-led" type="button" data-open-chat>Open the trial chat</button>
+        <button class="btn btn-line" type="button" id="watchDemo">Watch a demo visitor</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><div><b>Levia</b><div>Cleaning on another level.</div></div><div>© 2026 Levia · Concept and figures are illustrative</div></div>
+</footer>
+<style>
+#chatFab{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;align-items:center;gap:10px;background:var(--led-bright);color:#04121A;border:none;border-radius:999px;padding:14px 22px;font-weight:700;font-size:16px;box-shadow:0 14px 40px rgba(0,0,0,.3);cursor:pointer;font-family:var(--body)}
+#chatFab i{width:10px;height:10px;border-radius:50%;background:#1F8F4A;box-shadow:0 0 0 4px rgba(31,143,74,.25)}
+#chat{padding:0;position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:45;width:min(420px,calc(100vw - 32px));height:min(680px,calc(100vh - 110px));background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden}
+#chat[hidden]{display:none}
+.chead{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--night);color:var(--night-text)}
+.chead .av{width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#9FE3FA,#127FB0);flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:#04121A}
+.chead b{display:block;font-size:15px}
+.chead small{color:var(--night-muted);font-size:12px}
+.chead button{margin-left:auto;background:none;border:none;color:var(--night-muted);font-size:22px;cursor:pointer;padding:4px 8px}
+.cprog{height:3px;background:var(--line)}
+.cprog i{display:block;height:100%;width:0;background:var(--led-bright);transition:width .3s}
+#cmsgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--ground)}
+.msg{max-width:86%;padding:10px 14px;border-radius:16px;font-size:15px;line-height:1.45;white-space:pre-line}
+.msg.bot{background:var(--paper);border:1px solid var(--line);border-bottom-left-radius:4px;align-self:flex-start}
+.msg.me{background:var(--ink);color:var(--paper);border-bottom-right-radius:4px;align-self:flex-end}
+.msg.sum{max-width:100%;white-space:normal}
+.msg.sum dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:8px 0 0;font-size:13px}
+.msg.sum dt{color:var(--muted)}
+.msg.sum dd{margin:0;font-weight:600}
+.typing{display:inline-flex;gap:4px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{50%{opacity:.25}}
+.cfoot{border-top:1px solid var(--line);padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--paper)}
+#cchips{display:flex;flex-wrap:wrap;gap:6px}
+#cchips button{border:1px solid var(--led);background:transparent;color:var(--led);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--body)}
+#cchips button[aria-pressed="true"]{background:var(--led);color:#fff}
+#cchips button.done{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.cin{display:flex;gap:8px}
+.cin input{flex:1;min-width:0;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--ground);color:var(--ink);font-size:15px;font-family:var(--body)}
+.cin button{border:none;border-radius:12px;padding:0 16px;background:var(--led-bright);color:#04121A;font-weight:700;cursor:pointer}
+#cerr{font-size:12px;color:#C23B32;min-height:0}
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px}
+.thumbs figure{margin:0;position:relative;border-radius:10px;overflow:hidden;aspect-ratio:4/3;background:#000}
+.thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.thumbs figcaption{position:absolute;left:0;right:0;bottom:0;font-size:10px;font-weight:700;padding:3px 6px;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff}
+.msg.me.ph{background:transparent;padding:0;max-width:92%}
+.mwrap{position:relative;height:240px;border-radius:14px;overflow:hidden;background:#0D1A22;margin-top:8px}
+.mwrap canvas{display:block;width:100%;height:100%;touch-action:none}
+.mwrap.big{position:fixed;inset:6vh 6vw;height:auto;z-index:80;box-shadow:0 0 0 100vmax rgba(0,0,0,.6);border-radius:20px}
+.mwrap .mlabels{position:absolute;inset:0;pointer-events:none}
+.mwrap .mcap{position:absolute;left:10px;right:10px;bottom:10px;background:rgba(8,16,22,.82);color:#EAF4F8;font-size:12px;font-weight:600;padding:7px 10px;border-radius:10px;display:none}
+.mwrap .mcap.on{display:block}
+.mwrap .mbig{position:absolute;right:8px;top:8px;background:rgba(8,16,22,.8);color:#EAF4F8;border:1px solid rgba(255,255,255,.2);border-radius:8px;font-size:12px;font-weight:700;padding:5px 9px;cursor:pointer;font-family:var(--body)}
+.mwrap .mhint{position:absolute;left:10px;top:10px;color:#9DB4C0;font-size:11px}
+.rlabel{position:absolute;left:0;top:0;white-space:nowrap;background:rgba(8,16,22,.82);color:#EAF4F8;font-size:10px;font-weight:600;padding:2px 7px;border-radius:999px;pointer-events:none;transition:opacity .3s;opacity:0;margin:-9px 0 0 -20px}
+.rlabel.floor{font-size:11px;font-weight:800;background:none;color:#9DB4C0;margin:-8px 0 0 -52px}
+.rlabel.bot{background:#127FB0;margin:-10px 0 0 -18px}
+.mwrap.big .rlabel{font-size:13px}
+@media (prefers-reduced-motion: reduce){ .typing i{animation:none} }
+</style>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<button id="chatFab" aria-controls="chat" aria-expanded="false"><i></i>Free 14-day trial · chat with us</button>
+<section id="chat" hidden aria-label="Levia trial request chat">
+  <div class="chead"><span class="av">L</span><div><b>Levia assistant</b><small>Free trial · 14 days · one floor</small></div><button id="chatClose" aria-label="Close chat">×</button></div>
+  <div class="cprog"><i id="cbar"></i></div>
+  <div id="cmsgs" role="log" aria-live="polite"></div>
+  <div class="cfoot"><div id="cchips"></div><form class="cin" id="cform"><input id="cinput" autocomplete="off" aria-label="Your answer"><button type="submit">Send</button></form><div id="cerr" role="alert"></div></div>
+</section>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const A = {};               // answers
+  const FAST = /fast/.test(location.hash) || !!window.LEVIA_FAST, PACE = FAST ? .4 : 1;
+  const store = { get(k) { try { return JSON.parse(localStorage.getItem('levia-trial:' + k)); } catch { return null; } }, set(k, v) { try { localStorage.setItem('levia-trial:' + k, JSON.stringify(v)); } catch {} } };
+  // Each step: key, question, kind (text | email | number | chips | multi | date | file | skip-able), options
+  const STEPS = [
+    { k: 'name', q: 'Great! What’s your name?', kind: 'text' },
+    { k: 'company', q: 'Which company are you with?', kind: 'text' },
+    { k: 'role', q: 'And your role?', kind: 'chips', opts: ['Facility manager', 'Office manager', 'Owner / CEO', 'Operations', 'Other'] },
+    { k: 'email', q: 'Your work email, so we can confirm the trial?', kind: 'email' },
+    { k: 'phone', q: 'A phone number for the site visit? (optional)', kind: 'text', optional: true },
+    { k: 'type', q: 'Let’s talk about the building. What type is it?', kind: 'chips', opts: ['Office', 'Hotel', 'Shopping centre', 'University', 'Coworking', 'Other'] },
+    { k: 'city', q: 'Where is it? City and address.', kind: 'text' },
+    { k: 'floors', q: 'How many floors should Levia clean?', kind: 'chips', opts: ['2', '3', '4', '5', '6–10', 'More than 10'] },
+    { k: 'area', q: 'Roughly how many m² in total (all floors)?', kind: 'number', unit: 'm²' },
+    { k: 'trialArea', q: 'The trial covers one floor. How many m² is that floor?', kind: 'number', unit: 'm²' },
+    { k: 'surfaces', q: 'Which floor surfaces do you have? Choose all that apply.', kind: 'multi', opts: ['Tiles / stone', 'Polished concrete', 'Wood / parquet', 'Vinyl / linoleum', 'Carpet', 'Rugs'] },
+    { k: 'vertical', q: 'Levia flies between floors through an open space. What connects your floors?', kind: 'chips', opts: ['Open atrium', 'Open stairwell', 'Enclosed stairs only', 'Lifts only', 'Not sure'] },
+    { k: 'ceiling', q: 'What’s the typical ceiling height?', kind: 'chips', opts: ['Under 2.5 m', '2.5–3 m', 'Over 3 m', 'Not sure'] },
+    { k: 'doors', q: 'How are rooms closed off? Choose all that apply.', kind: 'multi', opts: ['Mostly open-plan', 'Doors with handles', 'Badge / access-control doors', 'Automatic doors', 'Fire doors kept closed'] },
+    { k: 'zones', q: 'Any special areas? Choose all that apply.', kind: 'multi', opts: ['Server room', 'Labs', 'Kitchen / canteen', 'Restrooms', 'Reception', 'Executive offices', 'None'] },
+    { k: 'photos', q: 'Now a few photos, so I can build a 3D preview of your building. Please add clear photos of: the entrance, the atrium or stairwell, a typical floor, any special room (like the server room), and the spot where the Hub could go.', kind: 'photos', optional: true },
+    { k: 'empty', q: 'When is the building usually empty?', kind: 'chips', opts: ['After 19:00', 'After 21:00', 'Weekends only', 'Some areas are always occupied'] },
+    { k: 'night', q: 'Who is in the building at night?', kind: 'multi', opts: ['Security guard', 'Night shift staff', 'Nobody', 'Not sure'] },
+    { k: 'alarm', q: 'Is there an intrusion alarm with motion sensors? Levia’s movement could trigger it, so we plan around it.', kind: 'chips', opts: ['Yes, motion sensors', 'Yes, doors only', 'No alarm', 'Not sure'] },
+    { k: 'calendar', q: 'Which room-booking calendar do you use?', kind: 'chips', opts: ['Microsoft 365 / Outlook', 'Google Workspace', 'Other', 'None'] },
+    { k: 'current', q: 'How is the building cleaned today?', kind: 'chips', opts: ['External cleaning company', 'In-house staff', 'Robot vacuums', 'Mixed'] },
+    { k: 'frequency', q: 'How often?', kind: 'chips', opts: ['Every day', '3 times a week', 'Once a week', 'Less often'] },
+    { k: 'cost', q: 'Roughly what do you spend per month on cleaning? (optional, helps us compare)', kind: 'number', unit: '€ / month', optional: true },
+    { k: 'pain', q: 'What’s the biggest problem today? Choose all that apply.', kind: 'multi', opts: ['Cost', 'Inconsistent quality', 'Staff availability', 'Missed rooms', 'High surfaces / dust', 'Hygiene'] },
+    { k: 'hub', q: 'The Hub needs about 2 × 2.5 m of floor space near a power socket and a water tap. Do you have that?', kind: 'chips', opts: ['Yes, power and water', 'Power only', 'Not sure'] },
+    { k: 'wifi', q: 'Is there Wi-Fi on every floor?', kind: 'chips', opts: ['Yes', 'Partial', 'No'] },
+    { k: 'plan', q: 'Do you have a floor plan? You can attach it (PDF or image), or skip.', kind: 'file', optional: true },
+    { k: 'start', q: 'When would you like the trial to start?', kind: 'date' },
+    { k: 'notes', q: 'Anything else we should know? (optional)', kind: 'text', optional: true },
+    { k: 'consent', q: 'Last step: may Levia use this information to plan your trial and contact you? (GDPR)', kind: 'chips', opts: ['Yes, I agree'] },
+  ];
+  const FAQ = {
+    'Is it safe to fly indoors?': 'Levia flies only when areas are empty, its propellers are inside guarded ducts, and 360° sensors stop the flight if a person or obstacle is detected. Most of the work happens on wheels.',
+    'What does the trial include?': '14 days on one floor: installation of the Hub, a 3D scan of the floor, nightly cleaning (vacuum, wash, UV) and the app for your team. Free, with no obligation.',
+    'What do I need to provide?': 'Space for the Hub (about 2 × 2.5 m) near a power socket and a water tap, Wi-Fi, and someone to show us the building during the site visit.',
+    'How much does it cost after the trial?': 'Levia is a service. A continuous plan costs about €457 a month for a 600 m² office (36 months, €9.13 per m² a year, you supply water and detergent). A single night costs about €1.12 per m². Setup is €650. We send a personalised quote at the end of the trial.',
+  };
+  let i = -1, mode = 'intro', multi = new Set();
+  const msgs = $('cmsgs');
+  function say(text, who = 'bot', cls = '') { const d = document.createElement('div'); d.className = `msg ${who} ${cls}`; if (cls === 'sum') d.innerHTML = text; else d.textContent = text; msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight; return d; }
+  function botSay(text, then) {
+    const t = say('', 'bot'); t.innerHTML = '<span class="typing"><i></i><i></i><i></i></span>';
+    setTimeout(() => { t.textContent = text; msgs.scrollTop = msgs.scrollHeight; then && then(); }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 450 * PACE);
+  }
+  function chips(list, { multiSel = false, extra = [] } = {}) {
+    const box = $('cchips'); box.innerHTML = '';
+    list.forEach(o => { const b = document.createElement('button'); b.type = 'button'; b.textContent = o; if (multiSel) b.setAttribute('aria-pressed', 'false'); b.onclick = () => multiSel ? toggle(b, o) : answer(o); box.appendChild(b); });
+    extra.forEach(([label, fn, cls]) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = label; if (cls) b.className = cls; b.onclick = fn; box.appendChild(b); });
+  }
+  function toggle(b, o) { if (multi.has(o)) multi.delete(o); else multi.add(o); b.setAttribute('aria-pressed', String(multi.has(o))); }
+  function setInput(kind, placeholder) {
+    const inp = $('cinput'); inp.value = ''; inp.type = kind === 'email' ? 'email' : kind === 'number' ? 'number' : kind === 'date' ? 'date' : 'text';
+    inp.placeholder = placeholder || ''; inp.disabled = !['text', 'email', 'number', 'date'].includes(kind); $('cform').querySelector('button').disabled = inp.disabled;
+    if (kind === 'date') { const d = new Date(); d.setDate(d.getDate() + 14); inp.min = new Date().toISOString().slice(0, 10); inp.value = d.toISOString().slice(0, 10); }
+  }
+  function progress() { $('cbar').style.width = Math.max(0, Math.min(100, (i + 1) / STEPS.length * 100)) + '%'; }
+  function ask() {
+    $('cerr').textContent = ''; multi = new Set(); progress();
+    if (i >= STEPS.length) return summary();
+    const s = STEPS[i];
+    botSay(s.q, () => {
+      const extra = s.optional ? [['Skip', () => answer('—')]] : [];
+      if (s.kind === 'chips') { chips(s.opts, { extra }); setInput('none'); }
+      else if (s.kind === 'multi') { chips(s.opts, { multiSel: true, extra: [['Done ✓', () => multi.size ? answer([...multi].join(', ')) : ($('cerr').textContent = 'Choose at least one option, then press Done.'), 'done']] }); setInput('none'); }
+      else if (s.kind === 'photos') { chips([], { extra: [['Add photos', pickPhotos], ['Use sample photos', samplePhotos], ['Skip', () => answer('—')]] }); setInput('none'); }
+      else if (s.kind === 'file') { chips([], { extra: [['Attach a file', pickFile], ...extra] }); setInput('none'); }
+      else { chips([], { extra }); setInput(s.kind, s.unit ? `Number in ${s.unit}` : s.kind === 'email' ? 'name@company.com' : ''); setTimeout(() => $('cinput').focus(), 50); }
+      if (demo) setTimeout(() => autoAnswer(s), 800 * PACE);
+    });
+  }
+  function pickFile() { const f = document.createElement('input'); f.type = 'file'; f.accept = '.pdf,image/*'; f.onchange = () => { const file = f.files[0]; if (file) answer(`${file.name} (${Math.round(file.size / 1024)} KB)`); }; f.click(); }
+  function answer(v) {
+    const s = STEPS[i];
+    if (s && s.kind === 'email' && v !== '—' && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) { $('cerr').textContent = 'That email looks incomplete. Check it and try again.'; return; }
+    if (s && s.kind === 'number' && v !== '—' && !(+v > 0)) { $('cerr').textContent = `Please enter a number in ${s.unit}.`; return; }
+    if (s && !s.optional && !String(v).trim()) { $('cerr').textContent = 'Please answer, or pick one of the options.'; return; }
+    const shown = s && s.kind === 'number' && v !== '—' ? `${(+v).toLocaleString('en-GB')} ${s.unit}` : v;
+    say(shown, 'me'); if (s) { A[s.k] = shown; store.set('answers', A); store.set('step', i + 1); }
+    $('cchips').innerHTML = ''; i++; ask();
+  }
+  function summary() {
+    setInput('none'); progress();
+    const ref = 'LV-TRIAL-' + String(Date.now()).slice(-5);
+    const rows = STEPS.filter(s => s.k !== 'consent').map(s => `<dt>${labelOf(s.k)}</dt><dd>${escapeHTML(A[s.k] || '—')}</dd>`).join('');
+    botSay('Thank you! Here is your trial request. Please check it:', () => {
+      say(`<b>Free trial request · ${ref}</b><dl>${rows}</dl>`, 'bot', 'sum');
+      let warn = [];
+      if (/Enclosed|Lifts only/.test(A.vertical || '')) warn.push('Your floors are connected only by enclosed stairs or lifts, so during the trial Levia will clean one floor without flying between floors. Our team will check the options for the full service.');
+      if (/Under 2.5/.test(A.ceiling || '')) warn.push('Ceilings under 2.5 m limit flight; floor cleaning works normally.');
+      if (/motion/.test(A.alarm || '')) warn.push('We’ll agree alarm zones with your security provider before the first night.');
+      warn.forEach(w => say('Note: ' + w));
+      chips([], { extra: [['Send request', () => sent(ref)], ['Start over', restart]] });
+    });
+  }
+  function sent(ref) {
+    $('cchips').innerHTML = ''; say('Send request', 'me');
+    botSay(`Done. This is a preview, so the request isn’t sent yet; on the live site it goes straight to the Levia team.\n\nNext steps:\n1. We call you within 2 working days\n2. Site visit and 3D scan of the trial floor\n3. Hub installed, 14 nights of cleaning\n4. Final report and personalised quote\n\nReference: ${ref}`, () => chips([], { extra: [['Start over', restart]] }));
+    store.set('step', null); store.set('answers', null);
+  }
+  function restart() { demo = false; night = null; clearInterval(capTimer); msgs.innerHTML = ''; for (const k in A) delete A[k]; i = -1; mode = 'intro'; store.set('step', null); store.set('answers', null); intro(); }
+  // ---------- photos → 3D preview of the prospect's building ----------
+  const PHOTO_PARTS = ['Entrance', 'Atrium / stairs', 'Typical floor', 'Special room', 'Hub spot', 'Other'];
+  function pickPhotos() { const f = document.createElement('input'); f.type = 'file'; f.accept = 'image/*'; f.multiple = true;
+    f.onchange = () => { const list = [...f.files].slice(0, 6).map((file, k) => ({ url: URL.createObjectURL(file), label: PHOTO_PARTS[k] })); if (list.length) answerPhotos(list); }; f.click(); }
+  function samplePhotos() { answerPhotos([['morning', 'Entrance'], ['fly', 'Atrium / stairs'], ['clean', 'Typical floor'], ['door', 'Special room'], ['dock', 'Hub spot']].map(([f, label]) => ({ url: `img/${f}.jpg`, label }))); }
+  function answerPhotos(list) {
+    $('cchips').innerHTML = '';
+    const d = say('', 'me', 'ph'); d.innerHTML = `<div class="thumbs">${list.map(p => `<figure><img src="${p.url}" alt="${p.label}"><figcaption>${p.label}</figcaption></figure>`).join('')}</div>`;
+    A.photos = `${list.length} photos (${list.map(p => p.label.toLowerCase()).join(', ')})`; store.set('answers', A);
+    buildPreview(list.length, () => { i++; store.set('step', i); ask(); });
+  }
+  function genFloors() {
+    const nF = Math.max(1, Math.min(6, parseInt(A.floors) || 6)), atrium = /atrium|stairwell/i.test(A.vertical || ''), z = A.zones || '';
+    const F = {};
+    for (let f = 0; f < nF; f++) {
+      let names = f === 0 ? ['Reception', /Kitchen/.test(z) ? 'Canteen' : 'Meeting rooms', 'Open office'] : ['Open office', 'Meeting room'];
+      if (/Server/.test(z) && f === Math.min(1, nF - 1)) names.push('Server room');
+      if (/Labs/.test(z) && f === Math.min(2, nF - 1)) names.push('Lab');
+      if (/Executive/.test(z) && f === nF - 1 && nF > 1) names[0] = 'Executive offices';
+      if (/Restrooms/.test(z) && names.length < 4) names.push('Restrooms');
+      names = names.slice(0, 4);
+      const wt = n => n === 'Restrooms' ? .5 : n === 'Server room' ? .7 : 1, tot = names.reduce((a, n) => a + wt(n), 0);
+      const rooms = [{ id: (atrium ? 'atr' : 'st') + f, name: atrium ? (f ? '' : 'Atrium') : 'Stairs', x: 0, y: 0, w: 70, h: 200 }];
+      let x = 70; names.forEach((n, k) => { const w = k === names.length - 1 ? 350 - x : Math.round(280 * wt(n) / tot); rooms.push({ id: `f${f}r${k}`, name: n, x, y: 0, w, h: 200 }); x += w; });
+      F['F' + (f + 1)] = { name: f ? `Floor ${f + 1}` : 'Ground floor', rooms };
+    }
+    return { F, atrium, nF };
+  }
+  let model = null, night = null, capTimer = null;
+  function buildPreview(nPhotos, then) {
+    const g = genFloors(), rooms = Object.values(g.F).flatMap(f => f.rooms.filter(r => r.name && !/^(atr|st)/.test(r.id)));
+    const steps = [`Reading your ${nPhotos} photos…`, `Detecting ${g.nF} floor${g.nF > 1 ? 's' : ''}${g.atrium ? ' and an open atrium for flight' : ''}…`, `Placing ${rooms.length} spaces: ${[...new Set(rooms.map(r => r.name))].slice(0, 5).join(', ')}…`];
+    const run = k => k < steps.length ? botSay(steps[k], () => setTimeout(() => run(k + 1), 350 * PACE)) : showModel(g, then);
+    run(0);
+  }
+// inside the presentation, the parent page loads the 3D module for us; standalone (or cross-origin parent) we load it ourselves
+function loadBuilding() { try { if (window.parent !== window && window.parent.LEVIA_LOAD_BUILDING) return window.parent.LEVIA_LOAD_BUILDING(); } catch (e) {} return import('./levia-building.js'); }
+  function showModel(g, then) {
+    const d = say('', 'bot', 'sum'); d.style.width = '100%';
+    d.innerHTML = `<b>Your building · 3D preview</b><div style="font-size:13px;color:var(--muted)">${escapeHTML(A.company || 'Your company')} · ${escapeHTML(A.city || '')}</div><div class="mwrap" id="mwrap"><div class="mlabels" id="mlabels"></div><span class="mhint">Loading 3D…</span><button class="mbig" id="mbig" type="button">Expand</button><div class="mcap" id="mcap"></div></div>`;
+    const wrap = d.querySelector('#mwrap'); wrap.removeAttribute('id'); const labels = d.querySelector('#mlabels'); labels.removeAttribute('id');
+    const cap = d.querySelector('#mcap'); cap.removeAttribute('id'); const big = d.querySelector('#mbig'); big.removeAttribute('id');
+    big.onclick = () => { wrap.classList.toggle('big'); big.textContent = wrap.classList.contains('big') ? 'Close' : 'Expand'; };
+    addEventListener('keydown', e => { if (e.key === 'Escape' && wrap.classList.contains('big')) big.click(); });
+    loadBuilding().then(({ mountBuilding }) => {
+      night = null; model = mountBuilding(wrap, { floors: g.F, labelsEl: labels, getState: () => nightState(g) });
+      wrap.querySelector('.mhint').textContent = 'Drag to rotate';
+    }).catch(() => { wrap.querySelector('.mhint').textContent = '3D preview could not load here'; });
+    msgs.scrollTop = msgs.scrollHeight;
+    botSay(`This preview is built from your answers and photos. At the site visit, Levia scans the real building in a few minutes and replaces it with an exact 3D model.${g.atrium ? '' : '\n\nYour floors have no open atrium, so the trial runs on one floor without flying.'}`, () => {
+      const go = () => { $('cchips').innerHTML = ''; then(); };
+      chips([], { extra: [['▶ Play a night in my building', () => playNight(g, cap, demo ? go : null)], ['Continue', go]] });
+      if (demo) setTimeout(() => playNight(g, cap, go), 900 * PACE);
+    });
+  }
+  // a simulated night in the generated building: room by room, flying between floors, back to the Hub
+  function plan(g) {
+    const P = []; let t = 1.6; const room = FAST ? 1 : 1.4, fly = FAST ? .8 : 1.1;
+    Object.keys(g.F).forEach((fk, i) => {
+      if (i) { P.push({ kind: 'fly', floor: fk, a: t, b: t + fly }); t += fly; }
+      g.F[fk].rooms.filter(r => r.name && !/^(atr|st)/.test(r.id)).forEach(r => { P.push({ kind: 'clean', floor: fk, r, a: t, b: t + room }); t += room; });
+    });
+    if (Object.keys(g.F).length > 1) { P.push({ kind: 'fly', floor: 'F1', a: t, b: t + fly }); t += fly; }
+    return { P, end: t };
+  }
+  function nightState(g) {
+    const st = { progress: {}, booked: {}, robot: { floor: 'F1', x: 137, y: 163, state: 'docked', name: 'Levia' }, lost: null };
+    if (!night) return st;
+    const t = (performance.now() - night.t0) / 1000;
+    for (const s of night.P) if (s.kind === 'clean') st.progress[s.r.id] = Math.max(0, Math.min(1, (t - s.a) / (s.b - s.a)));
+    const cur = night.P.find(s => t >= s.a && t < s.b);
+    if (cur && cur.kind === 'clean') { const p = (t - cur.a) / (cur.b - cur.a); Object.assign(st.robot, { floor: cur.floor, x: cur.r.x + 14 + (cur.r.w - 28) * p, y: 100 + Math.sin(t * 5) * 55, state: 'cleaning' }); }
+    else if (cur) Object.assign(st.robot, { floor: cur.floor, x: 35, y: 110, state: g.atrium ? 'flying' : 'cleaning' });
+    return st;
+  }
+  function playNight(g, cap, done) {
+    $('cchips').innerHTML = ''; say('Play a night in my building', 'me');
+    const pl = plan(g); night = { ...pl, t0: performance.now() + 300 };
+    if (model) model.replayScan();
+    clearInterval(capTimer); cap.classList.add('on');
+    const wrapEl = cap.parentElement; if (FAST) wrapEl.classList.add('big');   // in the presentation, show the night full size
+    const clock = t => { const m = 19 * 60 + 30 + Math.round(t / pl.end * 150); return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; };
+    capTimer = setInterval(() => {
+      const t = (performance.now() - night.t0) / 1000, cur = pl.P.find(s => t >= s.a && t < s.b);
+      if (t >= pl.end) { clearInterval(capTimer); if (FAST) setTimeout(() => wrapEl.classList.remove('big'), 2500); cap.textContent = `${clock(pl.end)} · Back at the Hub: waste sorted, water refilled, charging. Report ready for the morning.`;
+        botSay('That’s one night: every space cleaned the same way, rooms locked by rule, and a report in the app before you arrive.', () => done ? setTimeout(done, 700 * PACE) : chips([], { extra: [['Replay', () => playNight(g, cap)], ['Continue', () => { $('cchips').innerHTML = ''; i++; store.set('step', i); ask(); }]] })); return; }
+      cap.textContent = t < 1.6 ? `${clock(0)} · Quick scan of every floor…` : !cur ? '' : cur.kind === 'fly' ? `${clock(t)} · ${g.atrium ? 'Flying through the atrium' : 'Moving'} to ${g.F[cur.floor].name}` :
+        `${clock(t)} · ${cur.r.name === 'Server room' ? 'Server room: door opened, cleaned and locked again' : `Vacuum, wash and UV-C · ${cur.r.name}`} · ${g.F[cur.floor].name}`;
+    }, 150);
+  }
+  // ---------- demo visitor: fills in the chat automatically ----------
+  let demo = false;
+  const DEMO = { name: 'Marco Bianchi', company: 'Fabbrica Nove', role: 'Facility manager', email: 'marco@fabbricanove.example', type: 'Office', city: 'Via Tortona 9, Milan', floors: '4', area: '3200', trialArea: '800',
+    surfaces: 'Tiles / stone, Wood / parquet, Carpet', vertical: 'Open atrium', ceiling: 'Over 3 m', doors: 'Doors with handles, Badge / access-control doors', zones: 'Server room, Kitchen / canteen, Restrooms, Reception',
+    empty: 'After 19:00', night: 'Security guard', alarm: 'Yes, motion sensors', calendar: 'Microsoft 365 / Outlook', current: 'External cleaning company', frequency: 'Every day', cost: '5200',
+    pain: 'Cost, Inconsistent quality, Staff availability', hub: 'Yes, power and water', wifi: 'Yes', notes: 'Reception closes at 19:00.', consent: 'Yes, I agree' };
+  function autoAnswer(s) {
+    if (!demo || STEPS[i] !== s) return;
+    if (s.kind === 'photos') return samplePhotos();
+    if (s.kind === 'date') return answer($('cinput').value);
+    answer(DEMO[s.k] ?? '—');
+  }
+  function startDemo() { say('Watch a demo visitor', 'me'); $('cchips').innerHTML = ''; demo = true; mode = 'steps';
+    botSay('Here is Marco, facility manager of a 4-floor office in Milan, requesting a trial. Sit back: his answers fill in automatically.', () => { i = 0; ask(); }); }
+  const LABELS = { photos: 'Photos', name: 'Name', company: 'Company', role: 'Role', email: 'Email', phone: 'Phone', type: 'Building', city: 'Address', floors: 'Floors', area: 'Total area', trialArea: 'Trial floor', surfaces: 'Surfaces', vertical: 'Between floors', ceiling: 'Ceiling height', doors: 'Doors', zones: 'Special areas', empty: 'Empty from', night: 'At night', alarm: 'Alarm', calendar: 'Calendar', current: 'Cleaned by', frequency: 'Frequency', cost: 'Current cost', pain: 'Main problems', hub: 'Hub space', wifi: 'Wi-Fi', plan: 'Floor plan', start: 'Start date', notes: 'Notes' };
+  const labelOf = k => LABELS[k] || k;
+  const escapeHTML = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  function startSteps(label, from = 0) { say(label, 'me'); $('cchips').innerHTML = ''; mode = 'steps'; i = from; ask(); }
+  function intro() {
+    setInput('none'); progress();
+    botSay('Hi! I’m the Levia assistant. I can set up a free 14-day trial of Levia on one floor of your building, and show you a 3D preview of your building from a few photos. It takes about 3 minutes.', () => {
+      const extra = [['Start my free trial', () => startSteps('Start my free trial')], ['Watch a demo visitor', startDemo], ['I have a question first', () => { say('I have a question first', 'me'); faq(); }]];
+      if (store.get('step')) extra.push(['Continue where I left off', () => { Object.assign(A, store.get('answers') || {}); startSteps('Continue where I left off', store.get('step')); }]);
+      chips([], { extra });
+    });
+  }
+  function faq() {
+    mode = 'faq';
+    botSay('Sure. What would you like to know?', () => chips([], { extra: [...Object.keys(FAQ).map(q => [q, () => { say(q, 'me'); botSay(FAQ[q]); }]), ['Start my free trial', () => startSteps('Start my free trial')]] }));
+  }
+  $('cform').addEventListener('submit', e => { e.preventDefault(); if (mode === 'steps' && i >= 0 && i < STEPS.length) answer($('cinput').value.trim()); });
+  let opened = false;
+  function open() { $('chat').hidden = false; $('chatFab').hidden = true; $('chatFab').setAttribute('aria-expanded', 'true'); if (!opened) { opened = true; intro(); } }
+  $('chatFab').onclick = open; $('chatClose').onclick = () => { $('chat').hidden = true; $('chatFab').hidden = false; $('chatFab').setAttribute('aria-expanded', 'false'); };
+  document.querySelectorAll('[data-open-chat]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); open(); }));
+  window.leviaChat = { open, demo() { $('chat').hidden = false; $('chatFab').hidden = true; opened = true; restart(); setTimeout(() => { const b = [...$('cchips').querySelectorAll('button')].find(x => /demo/i.test(x.textContent)); if (b) b.click(); }, 700); } };
+})();
+</script>
+
+
+<script>
+const CAPS = [
+  ['3D memory', 'A fast scan maps every floor, then it remembers.', '<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/>'],
+  ['Door sensors', 'Knows which doors are open before it moves.', '<rect x="6" y="3" width="12" height="18" rx="1"/><circle cx="15" cy="12" r="1"/>'],
+  ['Arms & hands', 'Opens doors, picks up items, swaps brushes.', '<path d="M4 20l5-6 4 2 5-9"/><circle cx="18" cy="5" r="2"/>'],
+  ['App control', 'Live status, schedules and a morning report.', '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>'],
+  ['Waste sorting', 'Dust, paper and plastic emptied at the Hub.', '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'],
+  ['Vacuum, wash + UV', 'Vacuums, washes with water and sanitizes with UV-C light.', '<path d="M3 20h18M6 16h12M9 12h6M12 4v4"/>'],
+  ['Room rules', 'Learns what to close, lock or avoid.', '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'],
+  ['Calendar sync', 'Works around bookings and events.', '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
+  ['Lost & found', 'Finds lost items and brings them back.', '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>'],
+  ['Air & scent', 'HEPA filtering and a fragrance per room.', '<path d="M3 8h11a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h8"/>'],
+];
+document.getElementById('caps').innerHTML = CAPS.map(([t, d, p]) => `<div class="cap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg><b>${t}</b><span>${d}</span></div>`).join('');
+// in-page links: scroll with JS (plain #anchors don't navigate inside the hosted preview); "Watch the film" also starts it
+document.querySelectorAll('a[href^="#"]:not([data-open-chat])').forEach(l => l.addEventListener('click', e => {
+  const t = document.getElementById(l.getAttribute('href').slice(1)); if (!t) return;
+  e.preventDefault(); t.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  if (t.id === 'film') { const v = t.querySelector('video'); if (v) { v.preload = 'auto'; v.play().catch(() => { v.muted = true; v.play().catch(() => {}); }); }   // if sound autoplay is blocked, start muted (unmute from the controls) }
+}));
+document.getElementById('watchDemo').addEventListener('click', () => window.leviaChat && window.leviaChat.demo());
+document.getElementById('demoForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+  const f = e.target, err = document.getElementById('formErr');
+  const missing = ['f-name', 'f-company', 'f-email'].filter(id => !document.getElementById(id).value.trim());
+  const email = document.getElementById('f-email').value.trim();
+  if (missing.length) { err.textContent = 'Please fill in your name, company and work email.'; document.getElementById(missing[0]).focus(); return; }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { err.textContent = 'That email address looks incomplete. Check it and try again.'; document.getElementById('f-email').focus(); return; }
+  err.textContent = ''; document.getElementById('formOk').classList.add('show');
+});
+</script>

@@ -1,0 +1,431 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Levia Ops</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --ground:#EEF2F4; --surface:#FFFFFF; --surface-2:#F4F7F9; --ink:#0F1A22; --muted:#5C6B74; --line:#DCE3E8;
+  --led:#127FB0; --led-soft:#E2F2FA; --amber:#B86E10; --amber-soft:#FCF0DD; --ok:#22834A; --ok-soft:#E1F3E8; --alert:#C23B32; --alert-soft:#FBE7E5; --violet:#7A4FA8; --violet-soft:#F1E9F8;
+  --side:#0F1A22; --side-ink:#C9D6DD; --side-muted:#7E909A;
+  --display:'Syne','Trebuchet MS',sans-serif; --body:'Figtree','Helvetica Neue',Arial,sans-serif; --mono:'JetBrains Mono',Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  color-scheme:dark; --ground:#0A1116; --surface:#131D24; --surface-2:#1A262E; --ink:#E5EDF1; --muted:#97A8B2; --line:#26343D;
+  --led:#4FC3F7; --led-soft:#12303E; --amber:#F2B24A; --amber-soft:#3A2B12; --ok:#5AC878; --ok-soft:#163223; --alert:#F0776E; --alert-soft:#3B1C1A; --violet:#C9A2E0; --violet-soft:#2C2238; --side:#070C10;
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark; --ground:#0A1116; --surface:#131D24; --surface-2:#1A262E; --ink:#E5EDF1; --muted:#97A8B2; --line:#26343D;
+  --led:#4FC3F7; --led-soft:#12303E; --amber:#F2B24A; --amber-soft:#3A2B12; --ok:#5AC878; --ok-soft:#163223; --alert:#F0776E; --alert-soft:#3B1C1A; --violet:#C9A2E0; --violet-soft:#2C2238; --side:#070C10;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;font-size:14px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--led);outline-offset:2px}
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100%}
+aside{background:var(--side);color:var(--side-ink);padding:22px 14px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh}
+.logo{font-family:var(--display);font-weight:800;font-size:24px;color:#fff;padding:0 8px;display:flex;align-items:baseline;gap:8px}
+.logo small{white-space:nowrap;font-family:var(--mono);font-size:10px;letter-spacing:1.4px;color:#4FC3F7;font-weight:600}
+.rolebox{padding:0 8px;display:flex;flex-direction:column;gap:6px}
+.rolebox label{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--side-muted);font-weight:700}
+.rolebox select{background:#1A2A34;border:1px solid #2A3B46;color:#fff;border-radius:10px;padding:9px 10px}
+nav.side{display:flex;flex-direction:column;gap:2px}
+nav.side button{display:flex;justify-content:space-between;align-items:center;background:none;border:none;color:var(--side-ink);text-align:left;padding:10px 10px;border-radius:10px;font-weight:600}
+nav.side button:hover{background:#16242D}
+nav.side button[aria-current="page"]{background:#1C3241;color:#fff}
+nav.side .count{font-family:var(--mono);font-size:11px;background:#25404F;color:#BFE6F7;border-radius:999px;padding:1px 7px}
+.me{margin-top:auto;padding:10px 8px;border-top:1px solid #22323C;font-size:12px;color:var(--side-muted)}
+.me b{display:block;color:#fff;font-size:13px}
+main{padding:26px 30px 40px;display:flex;flex-direction:column;gap:18px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+h1{font-family:var(--display);font-size:28px;margin:0;font-weight:700}
+.sub{color:var(--muted);font-size:13px;margin-top:4px}
+h2{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:4px 0 0;font-weight:700}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi b{display:block;font-family:var(--mono);font-size:26px;font-variant-numeric:tabular-nums;margin-top:4px}
+.kpi span{font-size:12px;color:var(--muted);font-weight:600}
+.kpi small{display:block;font-size:12px;color:var(--muted);margin-top:4px}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.pill i{width:7px;height:7px;border-radius:50%;background:currentColor}
+.p-ok{background:var(--ok-soft);color:var(--ok)} .p-led{background:var(--led-soft);color:var(--led)} .p-amber{background:var(--amber-soft);color:var(--amber)} .p-alert{background:var(--alert-soft);color:var(--alert)} .p-violet{background:var(--violet-soft);color:var(--violet)} .p-muted{background:var(--surface-2);color:var(--muted)}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr.click{cursor:pointer}
+tbody tr.click:hover{background:var(--surface-2)}
+td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+td small{display:block;color:var(--muted);font-size:12px}
+.mini{display:flex;align-items:center;gap:8px}
+.bar{height:6px;border-radius:6px;background:var(--surface-2);overflow:hidden;flex:1;min-width:50px}
+.bar i{display:block;height:100%;border-radius:6px}
+.btn{border:none;border-radius:10px;padding:9px 13px;font-weight:700;font-size:13px}
+.btn-primary{background:var(--led);color:#fff}
+:root[data-theme="dark"] .btn-primary{color:#05131B}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .btn-primary{color:#05131B} }
+.btn-ghost{background:var(--surface-2);border:1px solid var(--line)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 11px;font-size:12px;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.row{display:flex;align-items:center;gap:10px}
+.between{justify-content:space-between}
+.list{display:flex;flex-direction:column}
+.item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:none}
+.item b{display:block;font-size:14px}
+.item small{color:var(--muted);font-size:12px}
+.kanban{display:grid;grid-template-columns:repeat(5,minmax(190px,1fr));gap:12px;overflow-x:auto;padding-bottom:4px}
+.col{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px;min-height:160px}
+.col h3{margin:0 2px 2px;font-size:12px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between}
+.tcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:left;display:flex;flex-direction:column;gap:4px}
+.tcard b{font-size:13px}.tcard small{color:var(--muted);font-size:12px}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--surface);border-left:1px solid var(--line);box-shadow:-20px 0 50px rgba(0,0,0,.18);transform:translateX(105%);transition:transform .3s ease;z-index:20;padding:22px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+.drawer.show{transform:none}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:opacity .3s;z-index:19}
+.scrim.show{opacity:1;pointer-events:auto}
+.field{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:var(--muted)}
+.field input,.field select,.field textarea{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:9px 10px;font-weight:500;font-size:14px;color:var(--ink)}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.check{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.check:last-child{border-bottom:none}
+.check input{width:18px;height:18px;accent-color:var(--ok)}
+.timeline{position:relative;display:grid;grid-template-columns:110px 1fr;gap:0;font-size:12px}
+.lane{position:relative;height:56px;border-top:1px solid var(--line)}
+.lanelabel{height:56px;border-top:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;font-weight:700;font-size:13px}
+.lanelabel small{color:var(--muted);font-weight:500;font-size:11px}
+.slot{position:absolute;top:8px;bottom:8px;border-radius:9px;padding:4px 8px;font-size:11px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;border:none;text-align:left}
+.slot small{display:block;font-weight:500;opacity:.85}
+.hours{display:flex;justify-content:space-between;font-family:var(--mono);color:var(--muted);font-size:11px;padding:0 0 6px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,240%);background:var(--ink);color:var(--surface);border-radius:12px;padding:11px 16px;font-weight:600;transition:transform .3s;z-index:30;display:flex;gap:9px;align-items:center}
+.toast.show{transform:translate(-50%,0)}
+.toast i{width:9px;height:9px;border-radius:50%;background:var(--ok)}
+.sample{font-size:11px;color:var(--muted)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.chat{background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.5}
+@media (max-width: 900px){
+  .app{grid-template-columns:1fr}
+  aside{position:static;height:auto;padding:14px 16px;gap:12px}
+  nav.side{flex-direction:row;overflow-x:auto;scrollbar-width:none}
+  nav.side button{white-space:nowrap;gap:8px}
+  .me{display:none}
+  main{padding:18px 16px 36px}
+  .grid2{grid-template-columns:1fr}
+  .formgrid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion: reduce){.drawer,.scrim,.toast{transition:none}}
+</style>
+
+<div class="app">
+  <aside>
+    <div class="logo">Levia <small>OPS · INTERNAL</small></div>
+    <div class="rolebox"><label for="role">Signed in as</label>
+      <select id="role">
+        <option value="admin">Admin · Management</option>
+        <option value="ops">Operations manager</option>
+        <option value="tech">Field technician</option>
+        <option value="support">Customer support</option>
+        <option value="sales">Sales</option>
+      </select></div>
+    <nav class="side" id="nav" aria-label="Sections"></nav>
+    <div class="me" id="me"></div>
+  </aside>
+  <main id="main"></main>
+</div>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Details"></aside>
+<div class="toast" id="toast" role="status"><i id="tdot"></i><span id="ttxt"></span></div>
+
+<script>
+// ---------- roles: who sees what ----------
+const ROLES = {
+  admin: { who: ['Elena Conti', 'CEO · Admin'], nav: ['overview', 'fleet', 'orders', 'techs', 'parts', 'tickets', 'trials', 'customers', 'finance'] },
+  ops: { who: ['Davide Marino', 'Operations manager'], nav: ['overview', 'fleet', 'orders', 'techs', 'parts'] },
+  tech: { who: ['Paolo Ricci', 'Field technician · Milan'], nav: ['myday', 'orders', 'parts', 'fleet'] },
+  support: { who: ['Giada Russo', 'Customer support'], nav: ['tickets', 'fleet', 'customers', 'trials'] },
+  sales: { who: ['Marco Leone', 'Sales'], nav: ['trials', 'customers', 'quote'] },
+};
+const SECTIONS = {
+  overview: 'Overview', myday: 'My day', fleet: 'Fleet health', orders: 'Work orders', techs: 'Technician schedule', parts: 'Spare parts',
+  tickets: 'Support tickets', trials: 'Trial requests', customers: 'Customers & contracts', finance: 'Finance & funding', quote: 'Quote builder',
+};
+
+// ---------- sample data ----------
+const TECHS = [['Paolo Ricci', 'Milan'], ['Giulia Sala', 'Milan'], ['Ahmed Karim', 'Turin'], ['Sofia Greco', 'Lyon']];
+const CUSTOMERS = [
+  { id: 'C-104', name: 'Northwind Studio', city: 'Milan', plan: 'Continuous 36 m', m2: 2400, robots: 2, monthly: 914, month: 9, term: 36, health: 'ok' },
+  { id: 'C-108', name: 'Brera Legal', city: 'Milan', plan: 'Continuous 12 m', m2: 900, robots: 1, monthly: 512, month: 4, term: 12, health: 'ok' },
+  { id: 'C-111', name: 'Lumen Bank · Torino', city: 'Turin', plan: 'Continuous 36 m', m2: 4300, robots: 3, monthly: 1290, month: 15, term: 36, health: 'amber' },
+  { id: 'C-115', name: 'Atelier Rhône', city: 'Lyon', plan: 'Continuous 36 m', m2: 1500, robots: 1, monthly: 457, month: 2, term: 36, health: 'ok' },
+  { id: 'C-117', name: 'Colle Dental Clinic', city: 'Turin', plan: 'Single services', m2: 600, robots: 0, monthly: 672, month: 0, term: 0, health: 'ok' },
+  { id: 'C-120', name: 'Verde Coworking', city: 'Milan', plan: 'Continuous 12 m', m2: 1800, robots: 2, monthly: 1020, month: 11, term: 12, health: 'alert' },
+];
+const FLEET = [
+  ['LV-0012', 'Atlas', 'C-104', 'HQ Building', 100, 64, 'ok', 'Docked · charged'],
+  ['LV-0013', 'Nova', 'C-104', 'Annex', 98, 88, 'ok', 'Docked · charged'],
+  ['LV-0021', 'Brera', 'C-108', 'Via Brera 14', 91, 79, 'ok', 'Docked · charged'],
+  ['LV-0027', 'Lumi 1', 'C-111', 'Tower A', 87, 52, 'amber', 'Mop pad worn'],
+  ['LV-0028', 'Lumi 2', 'C-111', 'Tower A', 95, 81, 'ok', 'Docked · charged'],
+  ['LV-0029', 'Lumi 3', 'C-111', 'Tower B', 40, 77, 'amber', 'Low battery health'],
+  ['LV-0034', 'Rhône', 'C-115', 'Quai 9', 100, 96, 'ok', 'Docked · charged'],
+  ['LV-0036', 'Verde A', 'C-120', 'Loft 2', 0, 70, 'alert', 'Offline 6 h · Hub fault'],
+  ['LV-0037', 'Verde B', 'C-120', 'Loft 3', 93, 84, 'ok', 'Docked · charged'],
+  ['LV-0041', 'Trial-1', 'TR-07', 'Spazio Navigli · F2', 99, 100, 'led', 'On trial · day 6 of 14'],
+];
+const S = {
+  role: 'admin', section: null, fleetFilter: 'all', orderFilter: 'open',
+  orders: [
+    { id: 'WO-318', robot: 'LV-0036', type: 'Repair', title: 'Hub not charging · Verde A', pri: 'High', tech: 'Paolo Ricci', date: 'Today 08:00', status: 'In progress', parts: ['Hub charging contacts'] },
+    { id: 'WO-317', robot: 'LV-0027', type: 'Part swap', title: 'Mop pad + side brushes', pri: 'Medium', tech: 'Ahmed Karim', date: 'Today 10:30', status: 'Scheduled', parts: ['Mop pad', 'Side brush ×2'] },
+    { id: 'WO-316', robot: 'LV-0029', type: 'Repair', title: 'Battery health 40% · replace pack', pri: 'High', tech: 'Ahmed Karim', date: 'Today 14:00', status: 'Scheduled', parts: ['Battery pack'] },
+    { id: 'WO-315', robot: 'LV-0012', type: 'Quarterly visit', title: 'Q4 visit · Northwind HQ', pri: 'Low', tech: 'Giulia Sala', date: 'Tue 14 Oct', status: 'Scheduled', parts: ['HEPA filter', 'Side brush ×2', 'Mop pad'] },
+    { id: 'WO-314', robot: 'LV-0041', type: 'Install', title: 'Trial setup + 3D scan · Spazio Navigli', pri: 'Medium', tech: 'Paolo Ricci', date: 'Thu 25 Sep', status: 'Done', parts: [] },
+    { id: 'WO-313', robot: 'LV-0034', type: 'Install', title: 'Install robot + Hub · Atelier Rhône', pri: 'Medium', tech: 'Sofia Greco', date: 'Mon 22 Sep', status: 'Done', parts: [] },
+  ],
+  parts: [
+    ['Side brush', 'SB-02', 46, 40, 6.5], ['Mop pad', 'MP-01', 18, 30, 9], ['HEPA filter', 'HF-03', 52, 25, 14], ['UV-C lamp', 'UV-01', 9, 8, 38],
+    ['Battery pack', 'BP-48', 4, 6, 420], ['Ducted fan unit', 'DF-05', 12, 8, 95], ['Hub charging contacts', 'HC-02', 7, 5, 22], ['Arm gripper pads', 'AG-01', 30, 10, 4],
+  ],
+  tickets: [
+    { id: 'LV-2041', cust: 'C-104', subj: 'Kitchen corner not washed on Tuesday', cat: 'Missed area', pri: 'Low', status: 'New', age: '12 min', msg: 'Hi, the corner near the coffee machine was not washed on Tuesday night. Can you check?' },
+    { id: 'LV-2040', cust: 'C-120', subj: 'Robot not charging since last night', cat: 'Hub or charging', pri: 'High', status: 'Escalated', age: '6 h', msg: 'Verde A shows offline in the app since 02:10.' },
+    { id: 'LV-2038', cust: 'C-111', subj: 'Can Levia skip Floor 4 on Fridays?', cat: 'App or schedule', pri: 'Low', status: 'Waiting customer', age: '1 d', msg: 'We have events on Floor 4 every Friday evening.' },
+    { id: 'LV-2035', cust: 'C-108', subj: 'Invoice address change', cat: 'Billing', pri: 'Low', status: 'Solved', age: '3 d', msg: 'Please update the billing address to Via Solferino 3.' },
+  ],
+  trials: [
+    { id: 'TR-09', company: 'Fabbrica Nove', city: 'Milan', type: 'Office', floors: 4, m2: 3200, atrium: 'Yes', hours: 'Empty after 19:30', contact: 'Chiara · Facility', stage: 'New', src: 'Website chat · today' },
+    { id: 'TR-08', company: 'Hotel Aurora', city: 'Turin', type: 'Hotel common areas', floors: 3, m2: 1900, atrium: 'Yes', hours: 'Quiet 01:00–05:00', contact: 'Luca · Operations', stage: 'Scan booked', src: 'Website chat · 2 d' },
+    { id: 'TR-07', company: 'Spazio Navigli', city: 'Milan', type: 'Coworking', floors: 2, m2: 1100, atrium: 'Open stairwell', hours: 'Empty after 21:00', contact: 'Anna · Owner', stage: 'On trial', src: 'Website chat · 10 d' },
+    { id: 'TR-06', company: 'Studio Pellegrini', city: 'Lyon', type: 'Office', floors: 2, m2: 700, atrium: 'No', hours: 'Empty after 19:00', contact: 'Marc · Admin', stage: 'On trial', src: 'Referral · 12 d' },
+    { id: 'TR-05', company: 'Atelier Rhône', city: 'Lyon', type: 'Office', floors: 3, m2: 1500, atrium: 'Yes', hours: 'Empty after 20:00', contact: 'Claire · Facility', stage: 'Converted', src: 'Website chat · 1 m' },
+    { id: 'TR-04', company: 'Galleria Est', city: 'Milan', type: 'Retail', floors: 1, m2: 500, atrium: 'No', hours: 'Open until 22:00', contact: 'Rita · Store', stage: 'Lost', src: 'Website chat · 1 m', note: 'Single floor, no flight needed' },
+  ],
+  checks: {},
+};
+try { const r = localStorage.getItem('leviaOpsRole'); if (r && ROLES[r]) S.role = r; } catch (e) {}
+const STAGES = ['New', 'Scan booked', 'On trial', 'Converted', 'Lost'];
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const eur = n => '€' + Math.round(n).toLocaleString('en-US');
+const cust = id => CUSTOMERS.find(c => c.id === id) || { name: S.trials.find(t => t.id === id)?.company + ' (trial)' };
+const pillFor = k => ({ ok: 'p-ok', amber: 'p-amber', alert: 'p-alert', led: 'p-led' }[k] || 'p-muted');
+const STATUS_PILL = { 'New': 'p-led', 'In progress': 'p-violet', 'Scheduled': 'p-led', 'Done': 'p-ok', 'Escalated': 'p-alert', 'Waiting customer': 'p-amber', 'Solved': 'p-ok', 'Scan booked': 'p-violet', 'On trial': 'p-amber', 'Converted': 'p-ok', 'Lost': 'p-muted' };
+const PRI_PILL = { High: 'p-alert', Medium: 'p-amber', Low: 'p-muted' };
+const pill = (cls, t) => `<span class="pill ${cls}"><i></i>${esc(t)}</span>`;
+let tt; function toast(t, c = 'var(--ok)') { $('ttxt').textContent = t; $('tdot').style.background = c; $('toast').classList.add('show'); clearTimeout(tt); tt = setTimeout(() => $('toast').classList.remove('show'), 2400); }
+const counts = () => ({ orders: S.orders.filter(o => o.status !== 'Done').length, tickets: S.tickets.filter(t => t.status !== 'Solved').length, trials: S.trials.filter(t => t.stage === 'New').length, parts: S.parts.filter(p => p[2] < p[3]).length, fleet: FLEET.filter(f => f[6] === 'alert').length });
+
+// ---------- sections ----------
+function header(t, sub, action = '') { return `<div class="top"><div><h1>${t}</h1><div class="sub">${sub}</div></div>${action}</div>`; }
+function overview() {
+  const mrr = CUSTOMERS.filter(c => c.term).reduce((a, c) => a + c.monthly, 0), c = counts();
+  const up = Math.round(FLEET.filter(f => f[6] !== 'alert').length / FLEET.length * 1000) / 10;
+  return header('Overview', 'Wednesday 1 October · all regions') + `
+  <div class="kpis">
+    <div class="card kpi"><span>Robots in the field</span><b>${FLEET.length}</b><small>${FLEET.filter(f => f[6] === 'led').length} on trial</small></div>
+    <div class="card kpi"><span>Fleet uptime · 30 d</span><b>${up}%</b><small>Target 98%</small></div>
+    <div class="card kpi"><span>Open work orders</span><b>${c.orders}</b><small>${S.orders.filter(o => o.pri === 'High' && o.status !== 'Done').length} high priority</small></div>
+    <div class="card kpi"><span>Monthly recurring revenue</span><b>${eur(mrr)}</b><small>${CUSTOMERS.filter(c => c.term).length} continuous contracts</small></div>
+    <div class="card kpi"><span>Trial conversion</span><b>${Math.round(S.trials.filter(t => t.stage === 'Converted').length / Math.max(1, S.trials.filter(t => ['Converted', 'Lost'].includes(t.stage)).length) * 100)}%</b><small>${S.trials.filter(t => t.stage === 'On trial').length} trials running</small></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><div class="row between"><h2>Needs attention</h2><button class="btn btn-ghost" data-go="fleet">Fleet</button></div><div class="list">
+      ${FLEET.filter(f => f[6] === 'alert' || f[6] === 'amber').map(f => `<div class="item"><div><b>${f[0]} · ${esc(f[1])}</b><small>${esc(cust(f[2]).name)} · ${esc(f[7])}</small></div>${pill(pillFor(f[6]), f[6] === 'alert' ? 'Critical' : 'Check')}</div>`).join('')}
+    </div></div>
+    <div class="card"><div class="row between"><h2>Today’s field work</h2><button class="btn btn-ghost" data-go="techs">Schedule</button></div><div class="list">
+      ${S.orders.filter(o => o.date.startsWith('Today')).map(o => `<div class="item"><div><b>${o.id} · ${esc(o.title)}</b><small>${o.date.replace('Today ', '')} · ${o.tech}</small></div>${pill(STATUS_PILL[o.status], o.status)}</div>`).join('')}
+    </div></div>
+  </div>
+  <div class="sample">Sample data for the prototype</div>`;
+}
+function fleet() {
+  const F = { all: () => true, attention: f => f[6] === 'alert' || f[6] === 'amber', trial: f => f[6] === 'led' };
+  const rows = FLEET.filter(F[S.fleetFilter]);
+  return header('Fleet health', 'Every robot reports battery, part wear and status after each night') + `
+  <div class="chips" role="group" aria-label="Filter">${[['all', 'All'], ['attention', 'Needs attention'], ['trial', 'On trial']].map(([k, n]) => `<button class="chip" data-ff="${k}" aria-pressed="${S.fleetFilter === k}">${n}</button>`).join('')}</div>
+  <div class="card tablewrap"><table><thead><tr><th>Robot</th><th>Customer</th><th>Battery</th><th>Worst part</th><th>Status</th><th></th></tr></thead><tbody>
+  ${rows.map(f => `<tr><td><b>${f[0]}</b><small>“${esc(f[1])}”</small></td><td>${esc(cust(f[2]).name)}<small>${esc(f[3])}</small></td>
+    <td><div class="mini"><div class="bar"><i style="width:${f[4]}%;background:${f[4] < 50 ? 'var(--alert)' : 'var(--ok)'}"></i></div><span class="mono">${f[4]}%</span></div></td>
+    <td><div class="mini"><div class="bar"><i style="width:${f[5]}%;background:${f[5] < 60 ? 'var(--amber)' : 'var(--ok)'}"></i></div><span class="mono">${f[5]}%</span></div></td>
+    <td>${pill(pillFor(f[6]), f[7])}</td>
+    <td>${S.role === 'tech' ? '' : `<button class="btn btn-ghost" data-neworder="${f[0]}">Work order</button>`}</td></tr>`).join('')}
+  </tbody></table></div>
+  <div class="sample">Battery = charge now · Worst part = lowest remaining life among brushes, mop pad, filter, UV lamp, battery</div>`;
+}
+function orders() {
+  const mine = S.role === 'tech';
+  const fil = { open: o => o.status !== 'Done', done: o => o.status === 'Done', all: () => true };
+  const rows = S.orders.filter(o => (!mine || o.tech === ROLES.tech.who[0]) && fil[S.orderFilter](o));
+  return header('Work orders', mine ? 'Assigned to you' : 'Maintenance, repairs, installs and quarterly visits', mine ? '' : '<button class="btn btn-primary" data-neworder="">New work order</button>') + `
+  <div class="chips" role="group" aria-label="Filter">${[['open', 'Open'], ['done', 'Done'], ['all', 'All']].map(([k, n]) => `<button class="chip" data-of="${k}" aria-pressed="${S.orderFilter === k}">${n}</button>`).join('')}</div>
+  <div class="card tablewrap"><table><thead><tr><th>Order</th><th>Type</th><th>Robot</th><th>Priority</th><th>Technician</th><th>When</th><th>Status</th></tr></thead><tbody>
+  ${rows.map(o => `<tr class="click" data-order="${o.id}" tabindex="0"><td><b>${o.id}</b><small>${esc(o.title)}</small></td><td>${o.type}</td><td class="mono">${o.robot}</td><td>${pill(PRI_PILL[o.pri], o.pri)}</td><td>${o.tech}</td><td>${o.date}</td><td>${pill(STATUS_PILL[o.status], o.status)}</td></tr>`).join('') || '<tr><td colspan="7" class="muted">Nothing here.</td></tr>'}
+  </tbody></table></div><div class="sample">Click an order to open it</div>`;
+}
+function orderDrawer(id) {
+  const o = S.orders.find(x => x.id === id), f = FLEET.find(x => x[0] === o.robot);
+  return `<div class="row between"><h1 style="font-size:22px">${o.id}</h1><button class="btn btn-ghost" data-close>Close</button></div>
+  <div><b style="font-size:16px">${esc(o.title)}</b><div class="sub">${o.type} · ${o.date} · ${o.tech}</div></div>
+  <div class="row">${pill(PRI_PILL[o.pri], o.pri + ' priority')} ${pill(STATUS_PILL[o.status], o.status)}</div>
+  <div class="card list"><div class="item" style="padding-top:0"><div><b>Robot</b><small>${o.robot} “${esc(f?.[1] || '')}” · ${esc(cust(f?.[2]).name)}</small></div></div>
+    <div class="item"><div><b>Site</b><small>${esc(f?.[3] || '')}</small></div></div>
+    <div class="item" style="padding-bottom:0"><div><b>Parts to bring</b><small>${o.parts.join(', ') || 'None'}</small></div></div></div>
+  <h2>Checklist</h2>
+  <div class="card">${['Robot docked and powered off', 'Swap listed parts', 'Clean LiDAR + camera, check fan guards', 'Test UV-C lamp and mop pump', 'Run 2-minute self-test from the Hub', 'Customer signs off in the app'].map((c, i) => `<label class="check"><input type="checkbox" data-chk="${o.id}.${i}" ${S.checks[o.id + '.' + i] ? 'checked' : ''}>${c}</label>`).join('')}</div>
+  ${o.status === 'Done' ? '' : `<div class="row">${o.status === 'Scheduled' ? `<button class="btn btn-ghost" data-ostatus="${o.id}.In progress" style="flex:1">Start</button>` : ''}<button class="btn btn-primary" data-ostatus="${o.id}.Done" style="flex:1">Mark done</button></div>`}`;
+}
+function newOrderDrawer(robotId) {
+  return `<div class="row between"><h1 style="font-size:22px">New work order</h1><button class="btn btn-ghost" data-close>Close</button></div>
+  <label class="field">Robot<select id="noRobot">${FLEET.map(f => `<option ${f[0] === robotId ? 'selected' : ''}>${f[0]}</option>`).join('')}</select></label>
+  <div class="formgrid"><label class="field">Type<select id="noType"><option>Repair</option><option>Part swap</option><option>Quarterly visit</option><option>Install</option></select></label>
+  <label class="field">Priority<select id="noPri"><option>High</option><option selected>Medium</option><option>Low</option></select></label></div>
+  <label class="field">Title<input id="noTitle" placeholder="e.g. Replace mop pad"></label>
+  <div class="formgrid"><label class="field">Technician<select id="noTech">${TECHS.map(t => `<option>${t[0]}</option>`).join('')}</select></label>
+  <label class="field">When<input id="noDate" value="Tomorrow 09:00"></label></div>
+  <button class="btn btn-primary" id="createOrder">Create work order</button>`;
+}
+function techs() {
+  const H0 = 8, H1 = 18, pct = h => (h - H0) / (H1 - H0) * 100;
+  const plan = { 'Paolo Ricci': [[8, 10, 'WO-318 · Verde A', 'alert'], [11, 12.5, 'Trial check · Navigli', 'led'], [14, 16, 'Install · Fabbrica Nove scan', 'violet']], 'Giulia Sala': [[9, 11, 'Training · new techs', 'led'], [13, 15, 'Stock count · Milan', 'ok']], 'Ahmed Karim': [[10.5, 12, 'WO-317 · Lumi 1', 'amber'], [14, 16.5, 'WO-316 · Lumi 3 battery', 'alert']], 'Sofia Greco': [[9, 10, 'Remote check · Rhône', 'ok'], [15, 17, 'Trial setup · Pellegrini', 'violet']] };
+  return header('Technician schedule', 'Today · 08:00–18:00') + `
+  <div class="card"><div class="timeline"><div></div><div class="hours">${[8, 10, 12, 14, 16, 18].map(h => `<span>${String(h).padStart(2, '0')}:00</span>`).join('')}</div>
+  ${TECHS.map(([n, c]) => `<div class="lanelabel">${n}<small>${c}</small></div><div class="lane">${(plan[n] || []).map(([a, b, t, k]) => `<div class="slot" style="left:${pct(a)}%;width:${pct(b) - pct(a)}%;background:var(--${k}-soft);color:var(--${k})" title="${esc(t)}">${esc(t)}<small>${fmtH(a)}–${fmtH(b)}</small></div>`).join('')}</div>`).join('')}
+  </div></div><div class="sample">Sample schedule</div>`;
+}
+const fmtH = h => `${String(Math.floor(h)).padStart(2, '0')}:${h % 1 ? '30' : '00'}`;
+function parts() {
+  const val = S.parts.reduce((a, p) => a + p[2] * p[4], 0);
+  return header('Spare parts', `Central stock · Milan · value ${eur(val)}`) + `
+  <div class="card tablewrap"><table><thead><tr><th>Part</th><th>Code</th><th class="num">In stock</th><th class="num">Minimum</th><th class="num">Unit cost</th><th>Status</th><th></th></tr></thead><tbody>
+  ${S.parts.map((p, i) => { const low = p[2] < p[3]; return `<tr><td><b>${p[0]}</b></td><td class="mono">${p[1]}</td><td class="num">${p[2]}</td><td class="num">${p[3]}</td><td class="num">${eur(p[4])}</td><td>${pill(low ? 'p-alert' : p[2] < p[3] * 1.3 ? 'p-amber' : 'p-ok', low ? 'Below minimum' : p[2] < p[3] * 1.3 ? 'Running low' : 'OK')}</td>
+    <td>${S.role === 'tech' ? `<button class="btn btn-ghost" data-take="${i}">Take 1</button>` : `<button class="btn btn-ghost" data-reorder="${i}">Reorder</button>`}</td></tr>`; }).join('')}
+  </tbody></table></div><div class="sample">Sample stock · unit costs feed the pricing model (parts €750 per robot per year)</div>`;
+}
+function myday() {
+  const mine = S.orders.filter(o => o.tech === ROLES.tech.who[0] && o.status !== 'Done');
+  return header('Good morning, Paolo', 'Wednesday 1 October · 3 stops · van MI-07') + `
+  <div class="kpis"><div class="card kpi"><span>Stops today</span><b>3</b></div><div class="card kpi"><span>Open orders</span><b>${mine.length}</b></div><div class="card kpi"><span>Parts in van</span><b>14</b></div></div>
+  <h2>Route</h2>
+  <div class="card list">${[['08:00', 'Verde Coworking · Loft 2', 'WO-318 · Hub not charging', 'alert'], ['11:00', 'Spazio Navigli', 'Trial day 6 check · 15 min', 'led'], ['14:00', 'Fabbrica Nove', 'Trial 3D scan · 4 floors', 'violet']].map(([t, p, d, k]) => `<div class="item"><div class="row"><span class="mono" style="width:48px">${t}</span><div><b>${p}</b><small>${d}</small></div></div>${pill('p-' + k, k === 'alert' ? 'Urgent' : k === 'led' ? 'Visit' : 'Scan')}</div>`).join('')}</div>
+  ${mine.length ? `<h2>Your work orders</h2><div class="card list">${mine.map(o => `<button class="item" data-order="${o.id}" style="background:none;border:none;border-bottom:1px solid var(--line);text-align:left;width:100%"><div><b>${o.id} · ${esc(o.title)}</b><small>${o.date} · parts: ${o.parts.join(', ') || 'none'}</small></div>${pill(STATUS_PILL[o.status], o.status)}</button>`).join('')}</div>` : ''}
+  <div class="sample">Sample day</div>`;
+}
+function tickets() {
+  return header('Support tickets', 'From the customer app and email') + `
+  <div class="card tablewrap"><table><thead><tr><th>Ticket</th><th>Customer</th><th>Category</th><th>Priority</th><th>Age</th><th>Status</th></tr></thead><tbody>
+  ${S.tickets.map(t => `<tr class="click" data-ticket="${t.id}" tabindex="0"><td><b>${t.id}</b><small>${esc(t.subj)}</small></td><td>${esc(cust(t.cust).name)}</td><td>${t.cat}</td><td>${pill(PRI_PILL[t.pri], t.pri)}</td><td class="mono">${t.age}</td><td>${pill(STATUS_PILL[t.status], t.status)}</td></tr>`).join('')}
+  </tbody></table></div><div class="sample">LV-2041 is the same request a customer sends from Levia for Business</div>`;
+}
+function ticketDrawer(id) {
+  const t = S.tickets.find(x => x.id === id);
+  return `<div class="row between"><h1 style="font-size:22px">${t.id}</h1><button class="btn btn-ghost" data-close>Close</button></div>
+  <div><b style="font-size:16px">${esc(t.subj)}</b><div class="sub">${esc(cust(t.cust).name)} · ${t.cat} · ${t.age} ago</div></div>
+  <div class="row">${pill(PRI_PILL[t.pri], t.pri)} ${pill(STATUS_PILL[t.status], t.status)}</div>
+  <div class="chat">${esc(t.msg)}</div>
+  ${(t.replies || []).map(r => `<div class="chat" style="background:var(--led-soft)"><b>You:</b> ${esc(r)}</div>`).join('')}
+  <label class="field">Reply<textarea id="reply" rows="3" placeholder="Write to the customer…"></textarea></label>
+  <div class="row"><button class="btn btn-primary" data-reply="${t.id}" style="flex:1">Send reply</button><button class="btn btn-ghost" data-escalate="${t.id}" style="flex:1">Create work order</button><button class="btn btn-ghost" data-solve="${t.id}" style="flex:1">Solve</button></div>
+  <div class="sample">Prototype: replies are not sent anywhere</div>`;
+}
+function trials() {
+  return header('Trial requests', '14-day free trial on one floor · requests arrive from the website chat') + `
+  <div class="kanban">${STAGES.map(st => { const list = S.trials.filter(t => t.stage === st); return `<div class="col"><h3>${st}<span class="mono">${list.length}</span></h3>
+    ${list.map(t => `<button class="tcard" data-trial="${t.id}"><b>${esc(t.company)}</b><small>${t.city} · ${t.floors} floors · ${t.m2.toLocaleString('en-US')} m²</small><small>${esc(t.src)}</small></button>`).join('')}</div>`; }).join('')}</div>
+  <div class="sample">Click a card to see what the customer told the chat</div>`;
+}
+function trialDrawer(id) {
+  const t = S.trials.find(x => x.id === id), i = STAGES.indexOf(t.stage);
+  return `<div class="row between"><h1 style="font-size:22px">${esc(t.company)}</h1><button class="btn btn-ghost" data-close>Close</button></div>
+  <div class="row">${pill(STATUS_PILL[t.stage], t.stage)}<span class="sub" style="margin:0">${t.id} · ${esc(t.src)}</span></div>
+  <h2>From the website chat</h2>
+  <div class="card list">${[['Building type', t.type], ['City', t.city], ['Floors', t.floors], ['Floor area', t.m2.toLocaleString('en-US') + ' m²'], ['Atrium / stairwell for flight', t.atrium], ['When the building is empty', t.hours], ['Contact', t.contact]].map(([k, v]) => `<div class="item"><div><small>${k}</small><b>${esc(v)}</b></div></div>`).join('')}</div>
+  ${t.note ? `<div class="chat">${esc(t.note)}</div>` : ''}
+  <div class="card"><div class="row between"><div><b>Estimated continuous plan</b><div class="sub">36 months · customer supplies detergent</div></div><b class="mono" style="font-size:18px">${eur(estMonthly(t.m2))}/mo</b></div></div>
+  ${i < 3 ? `<button class="btn btn-primary" data-stage="${t.id}.${STAGES[i + 1]}">Move to “${STAGES[i + 1]}”</button>` : ''}
+  ${t.stage === 'On trial' ? `<button class="btn btn-ghost" data-stage="${t.id}.Lost">Mark as lost</button>` : ''}`;
+}
+// rough plan estimate, consistent with the pricing page (about €9 per m² per year at 600 m², cheaper per m² for bigger buildings)
+const estMonthly = m2 => Math.max(457, Math.round(457 * Math.pow(m2 / 600, .72) / 5) * 5);
+function customers() {
+  return header('Customers & contracts', `${CUSTOMERS.length} customers`) + `
+  <div class="card tablewrap"><table><thead><tr><th>Customer</th><th>Plan</th><th class="num">m²</th><th class="num">Robots</th><th class="num">Monthly</th><th>Contract</th><th>Health</th></tr></thead><tbody>
+  ${CUSTOMERS.map(c => `<tr><td><b>${esc(c.name)}</b><small>${c.id} · ${c.city}</small></td><td>${c.plan}</td><td class="num">${c.m2.toLocaleString('en-US')}</td><td class="num">${c.robots}</td><td class="num">${eur(c.monthly)}${c.term ? '' : '<small>per service</small>'}</td>
+    <td>${c.term ? `<div class="mini"><div class="bar"><i style="width:${c.month / c.term * 100}%;background:var(--led)"></i></div><span class="mono">${c.month}/${c.term}</span></div>` : '<span class="muted">On demand</span>'}</td>
+    <td>${pill(pillFor(c.health), c.health === 'ok' ? 'Healthy' : c.health === 'amber' ? 'Watch' : 'At risk')}</td></tr>`).join('')}
+  </tbody></table></div><div class="sample">Sample customers · Verde Coworking is at risk: robot offline and contract ends in 1 month</div>`;
+}
+function finance() {
+  const mrr = CUSTOMERS.filter(c => c.term).reduce((a, c) => a + c.monthly, 0);
+  return header('Finance & funding', 'Management only') + `
+  <div class="kpis"><div class="card kpi"><span>MRR</span><b>${eur(mrr)}</b><small>ARR ${eur(mrr * 12)}</small></div>
+  <div class="card kpi"><span>Installed cost per robot</span><b>€7,000</b><small>Robot €5,100 + Hub €1,900</small></div>
+  <div class="card kpi"><span>Gross margin · continuous</span><b>40%</b><small>Single service 45%</small></div>
+  <div class="card kpi"><span>Cash runway</span><b>19 mo</b><small>After seed round</small></div></div>
+  <div class="card"><h2>Funding rounds</h2><div class="list">${[['Pre-seed', '€0.6M', '2033', 'Prototype, first 5 pilots', 'ok', 'Closed'], ['Seed', '€2.9M', '2034–35', 'First 120 robots, ops team, France & Italy', 'led', 'In progress'], ['Series A', '€6.0M', '2036', 'Scale manufacturing, new countries', 'muted', 'Planned'], ['Fleet financing', 'Debt', 'Ongoing', 'Robots on contract financed by a leasing partner', 'violet', 'Negotiating']].map(([n, a, y, d, k, s]) => `<div class="item"><div><b>${n} · ${a} · ${y}</b><small>${d}</small></div>${pill('p-' + k, s)}</div>`).join('')}</div></div>
+  <div class="sample">Figures match the Levia pricing & cost model</div>`;
+}
+function quote() {
+  const m2 = S.qm2 || 1200, months = S.qmo || 36;
+  const base = estMonthly(m2), monthly = months === 12 ? Math.round(base * 1.08) : base, single = Math.round(672 * Math.pow(m2 / 600, .85) / 5) * 5;
+  return header('Quote builder', 'Same model as the public pricing page') + `
+  <div class="card" style="display:flex;flex-direction:column;gap:12px;max-width:560px">
+    <label class="field">Floor area: <span class="mono" id="qv">${m2.toLocaleString('en-US')} m²</span><input type="range" id="qm2" min="300" max="6000" step="100" value="${m2}"></label>
+    <div class="chips">${[36, 12].map(m => `<button class="chip" data-qmo="${m}" aria-pressed="${months === m}">${m}-month plan</button>`).join('')}</div>
+    <div class="list">
+      <div class="item"><div><b>Continuous plan</b><small>Customer supplies detergent and water</small></div><b class="mono" style="font-size:18px">${eur(monthly)}/mo</b></div>
+      <div class="item"><div><b>Single service</b><small>Levia supplies water and detergent</small></div><b class="mono" style="font-size:18px">${eur(single)}</b></div>
+      <div class="item"><div><b>Robots needed</b><small>Up to 1,500 m² per robot per night</small></div><b class="mono">${Math.ceil(m2 / 1500)}</b></div>
+    </div>
+    <button class="btn btn-primary" id="sendQuote">Send quote to customer</button>
+  </div><div class="sample">Estimates, excluding VAT</div>`;
+}
+const VIEWS = { overview, myday, fleet, orders, techs, parts, tickets, trials, customers, finance, quote };
+
+// ---------- render ----------
+function render() {
+  const R = ROLES[S.role]; if (!R.nav.includes(S.section)) S.section = R.nav[0];
+  const c = counts(), badge = { orders: c.orders, tickets: c.tickets, trials: c.trials, parts: c.parts, fleet: c.fleet };
+  $('nav').innerHTML = R.nav.map(k => `<button data-sec="${k}" ${S.section === k ? 'aria-current="page"' : ''}><span>${SECTIONS[k]}</span>${badge[k] ? `<span class="count">${badge[k]}</span>` : ''}</button>`).join('');
+  $('me').innerHTML = `<b>${R.who[0]}</b>${R.who[1]}`;
+  $('role').value = S.role;
+  $('main').innerHTML = VIEWS[S.section]();
+}
+function openDrawer(html) { $('drawer').innerHTML = html; $('drawer').classList.add('show'); $('scrim').classList.add('show'); }
+function closeDrawer() { $('drawer').classList.remove('show'); $('scrim').classList.remove('show'); }
+$('role').addEventListener('change', e => { S.role = e.target.value; S.section = null; try { localStorage.setItem('leviaOpsRole', S.role); } catch (err) {} render(); toast(`Viewing as ${ROLES[S.role].who[1]}`, 'var(--led)'); });
+$('nav').addEventListener('click', e => { const b = e.target.closest('[data-sec]'); if (b) { S.section = b.dataset.sec; render(); } });
+$('scrim').addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); if (e.key === 'Enter' && e.target.matches('tr.click')) e.target.click(); });
+document.body.addEventListener('click', e => {
+  const t = e.target.closest('[data-go],[data-ff],[data-of],[data-order],[data-neworder],[data-close],[data-ostatus],[data-ticket],[data-trial],[data-stage],[data-reorder],[data-take],[data-reply],[data-solve],[data-escalate],[data-qmo],#createOrder,#sendQuote');
+  if (!t) return; const d = t.dataset;
+  if (d.go) { S.section = d.go; render(); }
+  else if (d.ff) { S.fleetFilter = d.ff; render(); }
+  else if (d.of) { S.orderFilter = d.of; render(); }
+  else if (d.order) openDrawer(orderDrawer(d.order));
+  else if (d.neworder !== undefined) openDrawer(newOrderDrawer(d.neworder));
+  else if (d.close !== undefined) closeDrawer();
+  else if (d.ostatus) { const [id, st] = d.ostatus.split('.'); S.orders.find(o => o.id === id).status = st; toast(`${id}: ${st}`); render(); openDrawer(orderDrawer(id)); }
+  else if (t.id === 'createOrder') { const id = 'WO-' + (319 + S.orders.length - 6); S.orders.unshift({ id, robot: $('noRobot').value, type: $('noType').value, title: $('noTitle').value.trim() || $('noType').value, pri: $('noPri').value, tech: $('noTech').value, date: $('noDate').value, status: 'Scheduled', parts: [] }); closeDrawer(); S.section = 'orders'; S.orderFilter = 'open'; render(); toast(`${id} created and assigned`); }
+  else if (d.ticket) openDrawer(ticketDrawer(d.ticket));
+  else if (d.reply) { const tk = S.tickets.find(x => x.id === d.reply), txt = $('reply').value.trim(); if (!txt) return toast('Write a reply first', 'var(--amber)'); (tk.replies ||= []).push(txt); tk.status = 'Waiting customer'; render(); openDrawer(ticketDrawer(tk.id)); toast('Reply saved'); }
+  else if (d.solve) { S.tickets.find(x => x.id === d.solve).status = 'Solved'; closeDrawer(); render(); toast(`${d.solve} solved`); }
+  else if (d.escalate) { const tk = S.tickets.find(x => x.id === d.escalate), f = FLEET.find(x => x[2] === tk.cust); openDrawer(newOrderDrawer(f ? f[0] : '')); setTimeout(() => { $('noTitle').value = tk.subj; }, 0); }
+  else if (d.trial) openDrawer(trialDrawer(d.trial));
+  else if (d.stage) { const [id, st] = d.stage.split('.'); S.trials.find(x => x.id === id).stage = st; render(); openDrawer(trialDrawer(id)); toast(`Moved to ${st}`); }
+  else if (d.reorder) { const p = S.parts[d.reorder], q = Math.max(p[3] * 2 - p[2], 10); p[2] += q; render(); toast(`Ordered ${q} × ${p[0]}`); }
+  else if (d.take) { const p = S.parts[d.take]; if (p[2] > 0) { p[2]--; render(); toast(`1 × ${p[0]} logged to your van`); } }
+  else if (d.qmo) { S.qmo = +d.qmo; render(); }
+  else if (t.id === 'sendQuote') toast('Quote prepared · prototype, nothing is sent', 'var(--led)');
+});
+document.body.addEventListener('change', e => { if (e.target.dataset.chk) S.checks[e.target.dataset.chk] = e.target.checked; if (e.target.id === 'qm2') { S.qm2 = +e.target.value; render(); } });
+document.body.addEventListener('input', e => { if (e.target.id === 'qm2') $('qv').textContent = (+e.target.value).toLocaleString('en-US') + ' m²'; });
+render();
+</script>
