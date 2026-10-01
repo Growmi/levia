@@ -505,7 +505,14 @@ footer b{font-family:var(--display);color:var(--night-text);font-size:20px}
     A.photos = `${list.length} photos (${list.map(p => p.label.toLowerCase()).join(', ')})`; store.set('answers', A);
     buildPreview(list.length, () => { i++; store.set('step', i); ask(); });
   }
+  // the demo visitor is Sara: her preview is the same HQ building as in the film and the app
+  const HQ = {
+    F1: { name: 'Floor 1', rooms: [{ id: 'atr1', name: 'Atrium', x: 0, y: 0, w: 70, h: 200 }, { id: 'lobby', name: 'Lobby', x: 70, y: 0, w: 150, h: 200 }, { id: 'meetA', name: 'Meeting Room A', x: 220, y: 0, w: 130, h: 200 }] },
+    F2: { name: 'Floor 2', rooms: [{ id: 'atr2', name: '', x: 0, y: 0, w: 70, h: 200 }, { id: 'office', name: 'Open office', x: 70, y: 0, w: 180, h: 200 }, { id: 'server', name: 'Server room', x: 250, y: 0, w: 100, h: 200 }] },
+    F3: { name: 'Floor 3', rooms: [{ id: 'atr3', name: '', x: 0, y: 0, w: 70, h: 200 }, { id: 'break', name: 'Break room', x: 70, y: 0, w: 150, h: 200 }, { id: 'lounge', name: 'Lounge', x: 220, y: 0, w: 130, h: 200 }] },
+  };
   function genFloors() {
+    if (demo) return { F: HQ, atrium: true, nF: 3 };
     const nF = Math.max(1, Math.min(6, parseInt(A.floors) || 6)), atrium = /atrium|stairwell/i.test(A.vertical || ''), z = A.zones || '';
     const F = {};
     for (let f = 0; f < nF; f++) {
@@ -586,8 +593,8 @@ function loadBuilding() { try { if (window.parent !== window && window.parent.LE
   }
   // ---------- demo visitor: fills in the chat automatically ----------
   let demo = false;
-  const DEMO = { name: 'Marco Bianchi', company: 'Fabbrica Nove', role: 'Facility manager', email: 'marco@fabbricanove.example', type: 'Office', city: 'Via Tortona 9, Milan', floors: '4', area: '3200', trialArea: '800',
-    surfaces: 'Tiles / stone, Wood / parquet, Carpet', vertical: 'Open atrium', ceiling: 'Over 3 m', doors: 'Doors with handles, Badge / access-control doors', zones: 'Server room, Kitchen / canteen, Restrooms, Reception',
+  const DEMO = { name: 'Sara Bianchi', company: 'Northwind Studio', role: 'Facility manager', email: 'sara@northwind.example', type: 'Office', city: 'HQ Building, Via Tortona 9, Milan', floors: '3', area: '2400', trialArea: '800',
+    surfaces: 'Tiles / stone, Wood / parquet, Carpet', vertical: 'Open atrium', ceiling: 'Over 3 m', doors: 'Doors with handles, Badge / access-control doors', zones: 'Server room, Kitchen / canteen, Reception',
     empty: 'After 19:00', night: 'Security guard', alarm: 'Yes, motion sensors', calendar: 'Microsoft 365 / Outlook', current: 'External cleaning company', frequency: 'Every day', cost: '5200',
     pain: 'Cost, Inconsistent quality, Staff availability', hub: 'Yes, power and water', wifi: 'Yes', notes: 'Reception closes at 19:00.', consent: 'Yes, I agree' };
   function autoAnswer(s) {
@@ -597,7 +604,7 @@ function loadBuilding() { try { if (window.parent !== window && window.parent.LE
     answer(DEMO[s.k] ?? '—');
   }
   function startDemo() { say('Watch a demo visitor', 'me'); $('cchips').innerHTML = ''; demo = true; mode = 'steps';
-    botSay('Here is Marco, facility manager of a 4-floor office in Milan, requesting a trial. Sit back: his answers fill in automatically.', () => { i = 0; ask(); }); }
+    botSay('Here is Sara, facility manager of a 3-floor office in Milan, requesting a trial. Sit back: her answers fill in automatically.', () => { i = 0; ask(); }); }
   const LABELS = { photos: 'Photos', name: 'Name', company: 'Company', role: 'Role', email: 'Email', phone: 'Phone', type: 'Building', city: 'Address', floors: 'Floors', area: 'Total area', trialArea: 'Trial floor', surfaces: 'Surfaces', vertical: 'Between floors', ceiling: 'Ceiling height', doors: 'Doors', zones: 'Special areas', empty: 'Empty from', night: 'At night', alarm: 'Alarm', calendar: 'Calendar', current: 'Cleaned by', frequency: 'Frequency', cost: 'Current cost', pain: 'Main problems', hub: 'Hub space', wifi: 'Wi-Fi', plan: 'Floor plan', start: 'Start date', notes: 'Notes' };
   const labelOf = k => LABELS[k] || k;
   const escapeHTML = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
