@@ -629,10 +629,11 @@ function bldState() {
 }
 // the building stage moves between the Map and the 3D tab, so keep a direct reference (getElementById misses it while detached)
 const stageBEl = document.getElementById('stageB'), qB = sel => stageBEl.querySelector(sel);
+function showStill(stage, src) { stage.querySelectorAll('canvas').forEach(c => c.remove()); if (!stage.querySelector('img.still')) stage.insertAdjacentHTML('afterbegin', `<img class="still" src="${src}" alt="Levia" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`); }
 function ensureBld() {
   if (bld || bldLoading) return; bldLoading = true;
   import('./levia-building.js').then(({ mountBuilding }) => { bld = mountBuilding(stageBEl, { floors: FLOORS, labelsEl: qB('#blabels'), getState: bldState }); bld.setAccent(P.accent); qB('#hintB').textContent = 'Drag to rotate'; })
-    .catch(() => { qB('#hintB').textContent = 'Still image · 3D not available here'; });
+    .catch(() => { showStill(stageBEl, 'img/building.jpg'); qB('#hintB').textContent = 'Still image · 3D not available here'; });
 }
 function set3dMode(m) {
   v3mode = m; document.querySelectorAll('[data-v3]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v3 === m)));
@@ -646,7 +647,7 @@ function set3dMode(m) {
         onPart: (name, desc) => { $('mT').textContent = name; $('mD').textContent = desc || ''; },
         onAlert: a => { $('mT').textContent = a.title; $('mD').textContent = a.text; } });
       viewer.setAccent(P.accent); viewer.setAlerts(S.alerts); $('hint3d').textContent = 'Drag to rotate';
-    }).catch(() => { $('hint3d').textContent = 'Still image · 3D not available here'; }); }
+    }).catch(() => { showStill($('stage3d'), 'img/robot.jpg'); $('hint3d').textContent = 'Still image · 3D not available here'; }); }
 }
 function draw3dPanels() {
   const bad = new Set(S.alerts.map(a => a.part));

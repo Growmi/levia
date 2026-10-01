@@ -211,7 +211,7 @@ footer b{font-family:var(--display);color:var(--night-text);font-size:20px}
       <div class="steps">
         <article class="step"><img src="img/scan.jpg" alt="Blue LiDAR outlines of every room across three floors" loading="lazy"><div class="txt"><span class="t">19:30 · SCAN</span><h3>Maps the whole building</h3><p>A quick flight through every floor builds a 3D model of rooms, halls, stairs and furniture.</p></div></article>
         <article class="step"><img src="img/clean.jpg" alt="Levia vacuuming the lobby floor" loading="lazy"><div class="txt"><span class="t">19:48 · CLEAN</span><h3>Vacuums and washes, room by room</h3><p>Side brushes, suction and a water-fed mop pad. Booked rooms are skipped and cleaned after the meeting.</p></div></article>
-        <article class="step"><img src="img/fly.jpg" alt="Levia flying up the atrium past the staircase" loading="lazy"><div class="txt"><span class="t">20:12 · FLY</span><h3>Changes floors by air</h3><p>No stairs, no lifts. It takes off in the atrium, clears the railing and lands on the next floor.</p></div></article>
+        <article class="step"><img src="img/fly.jpg" alt="Levia flying up the atrium past the staircase" loading="lazy"><div class="txt"><span class="t">20:12 · FLY</span><h3>Changes floors by air</h3><p>Levia takes off in the atrium, clears the railing and lands on the next floor. Nobody needs to carry it.</p></div></article>
         <article class="step"><img src="img/door.jpg" alt="Levia's arm opening the server room door" loading="lazy"><div class="txt"><span class="t">20:31 · ACCESS</span><h3>Opens doors, then locks up</h3><p>Door sensors and a robotic arm. The server room is closed and locked again, as the rule says.</p></div></article>
         <article class="step"><img src="img/dock.jpg" alt="Levia at its Hub with three sorted waste bins and a clean-water tank" loading="lazy"><div class="txt"><span class="t">21:06 · HUB</span><h3>Back to the Hub</h3><p>Dust, paper and plastic go into separate bins, the water tank is refilled and Levia recharges.</p></div></article>
         <article class="step"><img src="img/morning.jpg" alt="Morning lobby with a visitor collecting her keys at reception" loading="lazy"><div class="txt"><span class="t">08:30 · REPORT</span><h3>Wakes up to a clean building</h3><p>A full report in the app, and lost items waiting at reception for their owners.</p></div></article>
@@ -539,6 +539,7 @@ footer b{font-family:var(--display);color:var(--night-text);font-size:20px}
   }
 // inside the presentation, the parent page loads the 3D module for us; standalone (or cross-origin parent) we load it ourselves
 function loadBuilding() { try { if (window.parent !== window && window.parent.LEVIA_LOAD_BUILDING) return window.parent.LEVIA_LOAD_BUILDING(); } catch (e) {} return import('./levia-building.js'); }
+function showStill(stage, src) { stage.querySelectorAll('canvas').forEach(c => c.remove()); if (!stage.querySelector('img.still')) stage.insertAdjacentHTML('afterbegin', `<img class="still" src="${src}" alt="Levia" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`); }
   function showModel(g, then) {
     const d = say('', 'bot', 'sum'); d.style.width = '100%';
     d.innerHTML = `<b>Your building · 3D preview</b><div style="font-size:13px;color:var(--muted)">${escapeHTML(A.company || 'Your company')} · ${escapeHTML(A.city || '')}</div><div class="mwrap" id="mwrap"><div class="mlabels" id="mlabels"></div><span class="mhint">Loading 3D…</span><button class="mbig" id="mbig" type="button">Expand</button><div class="mcap" id="mcap"></div></div>`;
@@ -549,7 +550,7 @@ function loadBuilding() { try { if (window.parent !== window && window.parent.LE
     loadBuilding().then(({ mountBuilding }) => {
       night = null; model = mountBuilding(wrap, { floors: g.F, labelsEl: labels, getState: () => nightState(g) });
       wrap.querySelector('.mhint').textContent = 'Drag to rotate';
-    }).catch(() => { wrap.querySelector('.mhint').textContent = 'Still image · 3D not available here'; });
+    }).catch(() => { showStill(wrap, 'img/building.jpg'); wrap.querySelector('.mhint').textContent = 'Still image · 3D not available here'; });
     msgs.scrollTop = msgs.scrollHeight;
     botSay(`This preview is built from your answers and photos. At the site visit, Levia scans the real building in a few minutes and replaces it with an exact 3D model.${g.atrium ? '' : '\n\nYour floors have no open atrium, so the trial runs on one floor without flying.'}`, () => {
       const go = () => { $('cchips').innerHTML = ''; then(); };
